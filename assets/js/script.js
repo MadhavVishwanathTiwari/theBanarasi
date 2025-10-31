@@ -112,7 +112,7 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observe elements for animation
 const animateElements = document.querySelectorAll(
-    '.about-text, .about-image, .menu-category, .gallery-item, .banquet-text, .banquet-image, .contact-info, .contact-form'
+    '.about-text, .about-image, .restaurant-text, .restaurant-image, .gallery-item, .banquet-text, .banquet-image, .contact-info, .contact-form'
 );
 
 animateElements.forEach((el, index) => {
@@ -212,6 +212,6 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Console message
-console.log('%cThe Banarasi Chai Wali', 'color: #8B6F47; font-size: 20px; font-weight: bold;');
-console.log('%cAuthentic Flavors, Timeless Traditions', 'color: #5C4033; font-size: 14px;');
+console.log('%cBanarasi Banquet & Restaurant', 'color: #8B6F47; font-size: 20px; font-weight: bold;');
+console.log('%cGandhidham\'s Preferred Destination for Fine Vegetarian Dining', 'color: #5C4033; font-size: 14px;');
 
