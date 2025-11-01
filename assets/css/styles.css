@@ -56,6 +56,9 @@ body {
     color: var(--color-black);
     background-color: var(--color-off-white);
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-overflow-scrolling: touch;
 }
 
 img {
@@ -928,12 +931,23 @@ section:nth-child(even) {
         right: 0;
     }
     
+    .nav-link {
+        font-size: 1.125rem;
+        padding: var(--spacing-sm) 0;
+    }
+    
+    .hero {
+        min-height: 500px;
+    }
+    
     .hero-title {
         font-size: 2.5rem;
+        padding: 0 var(--spacing-sm);
     }
     
     .hero-subtitle {
-        font-size: 1.25rem;
+        font-size: 1.125rem;
+        padding: 0 var(--spacing-sm);
     }
     
     .about-content,
@@ -942,43 +956,144 @@ section:nth-child(even) {
     .contact-content,
     .footer-content {
         grid-template-columns: 1fr;
+        gap: var(--spacing-md);
     }
     
     .features {
         grid-template-columns: 1fr;
     }
     
+    .feature {
+        padding: var(--spacing-sm);
+    }
+    
     .hero-buttons {
         flex-direction: column;
         align-items: center;
+        gap: var(--spacing-sm);
     }
     
     .btn {
         width: 100%;
         max-width: 300px;
+        padding: 12px 30px;
     }
     
     section {
         padding: var(--spacing-lg) 0;
     }
-}
-
-@media (max-width: 480px) {
-    .hero-title {
-        font-size: 2rem;
-    }
     
-    .hero-subtitle {
-        font-size: 1rem;
+    .container {
+        padding: 0 var(--spacing-sm);
     }
     
     .section-title {
         font-size: 2rem;
     }
     
+    .section-subtitle {
+        font-size: 1rem;
+        padding: 0 var(--spacing-sm);
+    }
+    
+    /* Image containers for mobile */
+    .about-images,
+    .restaurant-images,
+    .banquet-images {
+        gap: var(--spacing-sm);
+    }
+    
+    .image-placeholder {
+        min-height: 250px;
+    }
+    
+    /* Text sections */
+    .about-text h3,
+    .restaurant-text h3,
+    .banquet-text h3 {
+        font-size: 1.5rem;
+    }
+    
+    .about-text p,
+    .restaurant-text p,
+    .banquet-text p {
+        font-size: 1rem;
+    }
+    
+    /* Features and info boxes */
+    .restaurant-features,
+    .banquet-features {
+        gap: var(--spacing-xs);
+    }
+    
+    .restaurant-feature,
+    .banquet-feature {
+        padding: var(--spacing-xs);
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        min-height: 400px;
+    }
+    
+    .hero-title {
+        font-size: 1.75rem;
+        line-height: 1.3;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .hero-content {
+        padding-top: 60px;
+    }
+    
+    .section-title {
+        font-size: 1.75rem;
+    }
+    
+    .section-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .lead-text {
+        font-size: 1.1rem;
+    }
+    
+    .btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+    
+    .container {
+        padding: 0 1rem;
+    }
+    
+    section {
+        padding: var(--spacing-md) 0;
+    }
+    
+    .image-placeholder {
+        min-height: 200px;
+    }
+    
+    .feature h3,
+    .restaurant-feature,
+    .banquet-feature {
+        font-size: 0.85rem;
+    }
+    
+    .info-item h3 {
+        font-size: 1.25rem;
+    }
+    
     .footer-content {
         grid-template-columns: 1fr;
         text-align: center;
+        gap: var(--spacing-md);
     }
     
     .footer-logo {
@@ -986,8 +1101,16 @@ section:nth-child(even) {
         justify-content: center;
     }
     
+    .footer-logo-img {
+        width: 100px;
+    }
+    
     .social-links {
         justify-content: center;
+    }
+    
+    .scroll-indicator {
+        display: none;
     }
 }
 

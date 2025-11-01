@@ -104,8 +104,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // Intersection Observer for fade-in animations
 const observerOptions = {
-    threshold: 0.15,
-    rootMargin: '0px 0px 150px 0px'
+    threshold: 0.1,
+    rootMargin: '0px 0px 200px 0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
@@ -177,8 +177,6 @@ if ('IntersectionObserver' in window) {
 }
 
 // Video fallback handling
-const heroVideo = document.querySelector('.hero-video');
-
 if (heroVideo) {
     heroVideo.addEventListener('error', () => {
         console.log('Video not found, using fallback background');
