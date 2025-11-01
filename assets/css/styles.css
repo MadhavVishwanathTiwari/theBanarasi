@@ -153,12 +153,12 @@ h6 { font-size: 1rem; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.25rem 0;
+    padding: 0.5rem 0;
 }
 
 .logo-container {
-    width: 130px;
-    height: 90px;
+    width: 110px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -366,7 +366,7 @@ h6 { font-size: 1rem; }
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    border-radius: 0;
+    border-radius: 8px;
     transition: all var(--transition-fast);
     position: relative;
     overflow: hidden;
@@ -460,6 +460,13 @@ section:nth-child(even) {
     margin-bottom: 0;
 }
 
+.about-images {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+}
+
 .about-image {
     width: 100%;
 }
@@ -477,6 +484,13 @@ section:nth-child(even) {
 .image-placeholder svg {
     width: 100%;
     height: 100%;
+}
+
+.image-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 /* ===================================
@@ -623,6 +637,13 @@ section:nth-child(even) {
     color: var(--color-dark-brown);
 }
 
+.restaurant-images {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+}
+
 .restaurant-image .image-placeholder {
     min-height: 400px;
 }
@@ -665,6 +686,13 @@ section:nth-child(even) {
 
 .banquet-feature strong {
     color: var(--color-dark-brown);
+}
+
+.banquet-images {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
 }
 
 .banquet-image .image-placeholder {
@@ -769,7 +797,6 @@ section:nth-child(even) {
 .footer-logo-img {
     width: 120px;
     height: auto;
-    filter: brightness(0) invert(1);
 }
 
 .footer-links h4 {
@@ -908,10 +935,6 @@ section:nth-child(even) {
         grid-template-columns: 1fr;
     }
     
-    .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
     .hero-buttons {
         flex-direction: column;
         align-items: center;
@@ -938,10 +961,6 @@ section:nth-child(even) {
     
     .section-title {
         font-size: 2rem;
-    }
-    
-    .gallery-grid {
-        grid-template-columns: 1fr;
     }
     
     .footer-content {

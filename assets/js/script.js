@@ -97,8 +97,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // Intersection Observer for fade-in animations
 const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.15,
+    rootMargin: '0px 0px 100px 0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
@@ -112,13 +112,15 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observe elements for animation
 const animateElements = document.querySelectorAll(
-    '.about-text, .about-image, .restaurant-text, .restaurant-image, .gallery-item, .banquet-text, .banquet-image, .contact-info, .contact-form'
+    '.about-text, .about-images, .restaurant-images, .restaurant-text, .banquet-text, .banquet-images, .contact-info, .contact-form'
 );
 
 animateElements.forEach((el, index) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(30px)';
-    el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+    // Limit max delay to 0.3s to avoid late animations
+    const delay = Math.min(index * 0.05, 0.3);
+    el.style.transition = `opacity 0.5s ease ${delay}s, transform 0.5s ease ${delay}s`;
     observer.observe(el);
 });
 
@@ -190,17 +192,6 @@ if (heroVideo) {
         });
     });
 }
-
-// Gallery lightbox (basic implementation)
-const galleryItems = document.querySelectorAll('.gallery-item');
-
-galleryItems.forEach(item => {
-    item.addEventListener('click', () => {
-        // This would open a lightbox with the full image
-        console.log('Gallery item clicked - implement lightbox here');
-        // You can add a lightbox library like GLightbox or create a custom one
-    });
-});
 
 // Keyboard navigation
 document.addEventListener('keydown', (e) => {
