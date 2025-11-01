@@ -24,12 +24,21 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Navbar scroll effect
+// Navbar scroll effect - optimized
 const navbar = document.querySelector('.navbar');
+const heroVideo = document.querySelector('.hero-video');
+const sections = document.querySelectorAll('section[id]');
 let ticking = false;
+let lastScrolled = 0;
 
 function updateOnScroll() {
     const scrolled = window.pageYOffset;
+    
+    // Only update if scroll changed significantly (throttle DOM updates)
+    if (Math.abs(scrolled - lastScrolled) < 5) {
+        ticking = false;
+        return;
+    }
     
     // Update navbar shadow
     if (scrolled > 100) {
@@ -40,8 +49,6 @@ function updateOnScroll() {
     
     // Update active nav link
     let current = '';
-    const sections = document.querySelectorAll('section[id]');
-    
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
         
@@ -57,12 +64,12 @@ function updateOnScroll() {
         }
     });
     
-    // Parallax effect for hero video
-    const heroVideo = document.querySelector('.hero-video');
+    // Parallax effect for hero video (only when visible)
     if (heroVideo && scrolled < window.innerHeight) {
         heroVideo.style.transform = `translateY(${scrolled * 0.5}px)`;
     }
     
+    lastScrolled = scrolled;
     ticking = false;
 }
 
@@ -71,7 +78,7 @@ window.addEventListener('scroll', () => {
         window.requestAnimationFrame(updateOnScroll);
         ticking = true;
     }
-});
+}, { passive: true });
 
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -98,14 +105,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Intersection Observer for fade-in animations
 const observerOptions = {
     threshold: 0.15,
-    rootMargin: '0px 0px 100px 0px'
+    rootMargin: '0px 0px 150px 0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target); // Stop observing once visible
         }
     });
 }, observerOptions);
@@ -115,12 +122,8 @@ const animateElements = document.querySelectorAll(
     '.about-text, .about-images, .restaurant-images, .restaurant-text, .banquet-text, .banquet-images, .contact-info, .contact-form'
 );
 
-animateElements.forEach((el, index) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    // Limit max delay to 0.3s to avoid late animations
-    const delay = Math.min(index * 0.05, 0.3);
-    el.style.transition = `opacity 0.5s ease ${delay}s, transform 0.5s ease ${delay}s`;
+animateElements.forEach((el) => {
+    el.classList.add('fade-in-element');
     observer.observe(el);
 });
 
