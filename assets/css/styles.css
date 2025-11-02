@@ -902,12 +902,14 @@ section:nth-child(even) {
 .footer-bottom {
     text-align: center;
     padding-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
     border-top: 1px solid rgba(255, 254, 249, 0.2);
 }
 
 .footer-bottom p {
     color: var(--color-cream);
     font-size: 0.9rem;
+    padding: 0 var(--spacing-md);
 }
 
 /* ===================================
@@ -1332,6 +1334,28 @@ section:nth-child(even) {
         gap: var(--spacing-md);
     }
     
+    .footer-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .footer-links ul {
+        align-items: center;
+    }
+    
+    .footer-links a {
+        padding-left: 0;
+    }
+    
+    .footer-links a::before {
+        display: none;
+    }
+    
+    .footer-links a:hover {
+        padding-left: 0;
+    }
+    
     .footer-logo {
         display: flex;
         justify-content: center;
@@ -1339,6 +1363,14 @@ section:nth-child(even) {
     
     .footer-logo-img {
         width: 100px;
+    }
+    
+    .footer-bottom {
+        padding-bottom: 80px;
+    }
+    
+    .footer-bottom p {
+        padding: 0 80px 0 var(--spacing-md);
     }
     
     .social-links {
