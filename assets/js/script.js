@@ -127,34 +127,59 @@ animateElements.forEach((el) => {
     observer.observe(el);
 });
 
-// Form submission handler
+// Form submission handler with Web3Forms
 const contactForm = document.getElementById('contactForm');
 
 if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData);
-        
-        // Here you would normally send the data to a server
-        console.log('Form submitted:', data);
-        
-        // Show success message
         const button = contactForm.querySelector('button[type="submit"]');
         const originalText = button.textContent;
         
-        button.textContent = 'Message Sent!';
-        button.style.backgroundColor = '#1A5F3F';
+        // Show loading state
+        button.textContent = 'Sending...';
         button.disabled = true;
         
-        // Reset form
-        setTimeout(() => {
-            contactForm.reset();
-            button.textContent = originalText;
-            button.style.backgroundColor = '';
-            button.disabled = false;
-        }, 3000);
+        const formData = new FormData(contactForm);
+        
+        try {
+            // Send to Web3Forms
+            const response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Success
+                button.textContent = 'Message Sent! ✓';
+                button.style.backgroundColor = '#1A5F3F';
+                
+                // Reset form after 3 seconds
+                setTimeout(() => {
+                    contactForm.reset();
+                    button.textContent = originalText;
+                    button.style.backgroundColor = '';
+                    button.disabled = false;
+                }, 3000);
+            } else {
+                // Error from Web3Forms
+                throw new Error(data.message || 'Submission failed');
+            }
+        } catch (error) {
+            // Error handling
+            console.error('Form submission error:', error);
+            button.textContent = 'Error - Try Again';
+            button.style.backgroundColor = '#A0522D';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.backgroundColor = '';
+                button.disabled = false;
+            }, 3000);
+        }
     });
 }
 

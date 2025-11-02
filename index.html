@@ -183,7 +183,19 @@
             <h2 class="section-title">Contact Us</h2>
             <p class="section-subtitle">We'd love to hear from you</p>
             <div class="contact-content">
-                <form class="contact-form" id="contactForm">
+                <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+                    <!-- Replace with your Web3Forms Access Key -->
+                    <input type="hidden" name="access_key" value="eb4781b4-2fe3-4390-a518-46c2c0948114">
+                    
+                    <!-- Optional: Redirect after submission -->
+                    <input type="hidden" name="redirect" value="https://yourdomain.com/thank-you.html">
+                    
+                    <!-- Optional: Custom subject -->
+                    <input type="hidden" name="subject" value="New Contact Form Submission - Banarasi Restaurant">
+                    
+                    <!-- Optional: Identify the form -->
+                    <input type="hidden" name="from_name" value="Banarasi Website Contact Form">
+                    
                     <div class="form-group">
                         <input type="text" id="name" name="name" placeholder="Your Name" required>
                     </div>
@@ -191,11 +203,15 @@
                         <input type="email" id="email" name="email" placeholder="Your Email" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="phone" name="phone" placeholder="Your Phone">
+                        <input type="tel" id="phone" name="phone" placeholder="Your Phone" required>
                     </div>
                     <div class="form-group">
                         <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
                     </div>
+                    
+                    <!-- Honeypot spam protection -->
+                    <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+                    
                     <button type="submit" class="btn btn-primary">Send Message</button>
                 </form>
                 <div class="contact-info">
