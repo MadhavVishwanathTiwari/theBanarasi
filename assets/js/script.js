@@ -201,6 +201,88 @@ document.addEventListener('keydown', (e) => {
         navMenu.classList.remove('active');
         menuToggle.classList.remove('active');
     }
+    
+    // ESC to close WhatsApp chat
+    if (e.key === 'Escape') {
+        const chatBox = document.getElementById('whatsappChatBox');
+        const floatBtn = document.getElementById('whatsappButton');
+        if (chatBox && chatBox.classList.contains('active')) {
+            chatBox.classList.remove('active');
+            floatBtn.classList.remove('active');
+        }
+    }
+});
+
+// WhatsApp Chat Widget
+const whatsappButton = document.getElementById('whatsappButton');
+const whatsappChatBox = document.getElementById('whatsappChatBox');
+const whatsappClose = document.getElementById('whatsappClose');
+const whatsappInput = document.getElementById('whatsappInput');
+const whatsappSend = document.getElementById('whatsappSend');
+const whatsappNumber = '919310092139'; // Your WhatsApp number
+
+// Toggle chat box
+if (whatsappButton) {
+    whatsappButton.addEventListener('click', () => {
+        whatsappChatBox.classList.toggle('active');
+        whatsappButton.classList.toggle('active');
+        
+        // Focus input when opened
+        if (whatsappChatBox.classList.contains('active')) {
+            setTimeout(() => whatsappInput.focus(), 300);
+        }
+    });
+}
+
+// Close chat box
+if (whatsappClose) {
+    whatsappClose.addEventListener('click', () => {
+        whatsappChatBox.classList.remove('active');
+        whatsappButton.classList.remove('active');
+    });
+}
+
+// Send message
+function sendWhatsAppMessage() {
+    const message = whatsappInput.value.trim();
+    
+    if (message) {
+        // Encode message for URL
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+        
+        // Open WhatsApp
+        window.open(whatsappUrl, '_blank');
+        
+        // Clear input and close chat
+        whatsappInput.value = '';
+        whatsappChatBox.classList.remove('active');
+        whatsappButton.classList.remove('active');
+    }
+}
+
+// Send on button click
+if (whatsappSend) {
+    whatsappSend.addEventListener('click', sendWhatsAppMessage);
+}
+
+// Send on Enter key
+if (whatsappInput) {
+    whatsappInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendWhatsAppMessage();
+        }
+    });
+}
+
+// Close chat when clicking outside
+document.addEventListener('click', (e) => {
+    if (whatsappChatBox && whatsappButton) {
+        if (!whatsappChatBox.contains(e.target) && !whatsappButton.contains(e.target)) {
+            whatsappChatBox.classList.remove('active');
+            whatsappButton.classList.remove('active');
+        }
+    }
 });
 
 // Console message
