@@ -40,11 +40,11 @@ function updateOnScroll() {
         return;
     }
     
-    // Update navbar shadow
-    if (scrolled > 100) {
-        navbar.style.boxShadow = '0 5px 25px rgba(92, 64, 51, 0.15)';
+    // Update navbar background on scroll
+    if (scrolled > 50) {
+        navbar.classList.add('scrolled');
     } else {
-        navbar.style.boxShadow = '0 2px 20px rgba(92, 64, 51, 0.1)';
+        navbar.classList.remove('scrolled');
     }
     
     // Update active nav link
