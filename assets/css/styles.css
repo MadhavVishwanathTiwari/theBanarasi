@@ -807,6 +807,20 @@ section:nth-child(even) {
     visibility: hidden;
 }
 
+/* Internal pin track inside the Banquet section */
+.pin-track {
+    height: var(--pinTrackH, 1600px);
+}
+
+.pin-sticky {
+    position: sticky;
+    top: var(--stickyTop, 80px);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    z-index: 1;
+}
+
 .scroll-video-wrapper {
     position: sticky;
     top: var(--stickyTop, 80px);
@@ -840,7 +854,7 @@ section:nth-child(even) {
 }
 
 @media (max-width: 768px) {
-    .scroll-video-wrapper {
+    .scroll-video-wrapper, .pin-sticky {
         padding: 0 var(--spacing-sm);
     }
     
@@ -1989,28 +2003,5 @@ section:nth-child(even) {
     section {
         page-break-inside: avoid;
     }
-}
-
-/* Video track section to pin the scroll video below Banquet while overlapping */
-.video-track {
-    position: relative;
-    height: var(--video-track-height, 220vh);
-    margin-top: calc(-1 * var(--videoOverlap, var(--stickyTop, 80px)));
-    padding-top: 0; /* cap element now occupies this space */
-    z-index: 0;
-}
-
-.video-track + .contact {
-    position: relative;
-    z-index: 1;
-}
-
-/* Sticky cap to retain the top area while the video is pinned */
-.video-track-cap {
-    position: sticky;
-    top: 0;
-    height: var(--stickyTop, 80px);
-    background: var(--color-off-white);
-    z-index: 0;
 }
 

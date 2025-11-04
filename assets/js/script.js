@@ -36,7 +36,7 @@ const scrollVideoSection = document.querySelector('.scroll-video-section');
 const scrollVideo = document.querySelector('.scroll-video');
 const banquetSection = document.querySelector('#banquet');
 const scrollVideoWrapper = document.querySelector('.scroll-video-wrapper');
-const videoTrack = document.querySelector('.video-track');
+const pinTrack = document.querySelector('.pin-track');
 let currentVideoTime = 0;
 let targetVideoTime = 0;
 let isAnimating = false;
@@ -53,7 +53,7 @@ function setVideoTrackVars() {
     const viewportH = window.innerHeight;
     // Position sticky a bit lower on phones so the pin feels anchored mid-viewport
     const stickyTopOffset = (window.innerWidth <= 768)
-        ? Math.round(viewportH * 0.50) // ~22vh on mobile
+        ? Math.round(viewportH * 0.22) // ~22vh on mobile
         : 80;
     root.style.setProperty('--stickyTop', stickyTopOffset + 'px');
     // Estimate desired pin distance: scale with duration and viewport
@@ -63,9 +63,10 @@ function setVideoTrackVars() {
     const baseDistance = seconds * pxPerSec;
     const minDistance = viewportH * (window.innerWidth <= 768 ? 3.5 : 4.5);
     const pinDistanceDesired = Math.max(baseDistance, minDistance);
-    // Track height must include the part where sticky is visible but not pinned
-    const trackHeight = Math.round(pinDistanceDesired + (viewportH - stickyTopOffset));
-    root.style.setProperty('--video-track-height', trackHeight + 'px');
+    // For internal pin track, height = pinDistance + slack while sticky is visible
+    const pinTrackH = Math.round(pinDistanceDesired + (viewportH - stickyTopOffset));
+    root.style.setProperty('--pinTrackH', pinTrackH + 'px');
+    root.style.setProperty('--pinDistance', Math.round(pinDistanceDesired) + 'px');
 }
 
 if (document.readyState === 'loading') {
@@ -109,14 +110,14 @@ if (enableWheelScrub && scrollVideoWrapper && scrollVideo) {
     }, { passive: false });
 }
 
-// Slow down native scroll only while the sticky video is active (using video track)
-if (false && scrollVideoWrapper && scrollVideo && videoTrack) {
+// Slow down native scroll only while the sticky video is active (pin track)
+if (false && scrollVideoWrapper && scrollVideo && pinTrack) {
     const getAbsoluteTop = (el) => { let t = 0, n = el; while (n) { t += n.offsetTop || 0; n = n.offsetParent; } return t; };
     scrollVideoWrapper.addEventListener('wheel', (e) => {
         const viewportH = window.innerHeight;
         const stickyTopOffset = 80;
-        const trackTop = getAbsoluteTop(videoTrack);
-        const trackHeight = videoTrack.offsetHeight;
+        const trackTop = getAbsoluteTop(pinTrack);
+        const trackHeight = pinTrack.offsetHeight;
         const pinDistance = Math.max(0, trackHeight - (viewportH - stickyTopOffset));
         const start = trackTop - stickyTopOffset;
         const end = start + pinDistance;
@@ -190,8 +191,8 @@ function updateOnScroll() {
         heroVideo.style.transform = `translateY(${scrolled * 0.5}px)`;
     }
     
-    // Scroll-triggered video scrubbing (mapped to the full video track)
-    if (scrollVideo && videoTrack && !isNaN(scrollVideo.duration)) {
+    // Scroll-triggered video scrubbing (mapped to the internal pin track)
+    if (scrollVideo && pinTrack && !isNaN(scrollVideo.duration)) {
         // Absolute position helpers
         const getAbsoluteTop = (el) => {
             let top = 0;
@@ -203,14 +204,18 @@ function updateOnScroll() {
             return top;
         };
 
-        const trackTop = getAbsoluteTop(videoTrack);
-        const trackHeight = Math.max(1, videoTrack.offsetHeight);
+        const trackTop = getAbsoluteTop(pinTrack);
+        const trackHeight = Math.max(1, pinTrack.offsetHeight);
         const viewportH = window.innerHeight;
         const cssSticky = getComputedStyle(document.documentElement).getPropertyValue('--stickyTop').trim();
         const stickyTopOffset = cssSticky ? parseFloat(cssSticky) : 80; // matches CSS top on sticky
 
-        // Use only the pin distance (track minus visible slack) to avoid blank bottom
-        const pinDistance = Math.max(1, trackHeight - (viewportH - stickyTopOffset));
+        // pin distance from CSS var if present
+        const cssPin = getComputedStyle(document.documentElement).getPropertyValue('--pinDistance').trim();
+        const pinDistanceVar = cssPin ? parseFloat(cssPin) : null;
+        const pinDistance = pinDistanceVar && !isNaN(pinDistanceVar)
+            ? pinDistanceVar
+            : Math.max(1, trackHeight - (viewportH - stickyTopOffset));
         const effectiveDistance = pinDistance;
         const start = trackTop - stickyTopOffset; // start where pinning begins
         const end = start + effectiveDistance;
@@ -219,16 +224,10 @@ function updateOnScroll() {
             const progress = (scrolled - start) / effectiveDistance;
             const clamped = Math.max(0, Math.min(1, progress));
             targetVideoTime = clamped * scrollVideo.duration;
-            // Grow overlap while scrolling to keep seam tight
-            const extraOverlap = Math.min(stickyTopOffset, (scrolled - start));
-            document.documentElement.style.setProperty('--videoOverlap', (stickyTopOffset + extraOverlap) + 'px');
         } else if (scrolled < start) {
             targetVideoTime = 0;
-            document.documentElement.style.setProperty('--videoOverlap', stickyTopOffset + 'px');
         } else if (scrolled > end) {
             targetVideoTime = scrollVideo.duration;
-            // lock to max so after unpin there is no gap
-            document.documentElement.style.setProperty('--videoOverlap', (stickyTopOffset * 2) + 'px');
         }
     }
     
