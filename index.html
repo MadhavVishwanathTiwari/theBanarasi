@@ -25,8 +25,22 @@
                     <li><a href="#restaurant" class="nav-link">Restaurant</a></li>
                     <li><a href="#banquet" class="nav-link">Banquet</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li>
-                    <li><a href="#contact" class="btn btn-nav">Book Event</a></li>
+                    <li><button class="btn btn-nav" id="loginBtn">Login</button></li>
                 </ul>
+                <!-- User Profile Dropdown (shown when logged in) -->
+                <div class="user-profile" id="userProfile" style="display: none;">
+                    <button class="profile-btn" id="profileBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span id="userName">User</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="#" id="myBookingsLink">My Bookings</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    </div>
+                </div>
                 <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
                     <span></span>
                     <span></span>
@@ -403,6 +417,140 @@
         </div>
     </footer>
 
+    <!-- Login/Signup Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <button class="auth-close" id="authClose" aria-label="Close">&times;</button>
+            <h2 id="authTitle">Login to Book</h2>
+            
+            <!-- Phone Number Step -->
+            <div id="phoneStep" class="auth-step">
+                <p class="auth-subtitle">Enter your phone number to continue</p>
+                <form id="phoneForm">
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <div class="phone-input-group">
+                            <span class="country-code">+91</span>
+                            <input type="tel" id="phoneNumber" placeholder="10-digit mobile number" maxlength="10" pattern="[0-9]{10}" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="sendOtpBtn">Send OTP</button>
+                </form>
+                <p class="auth-footer">By continuing, you agree to our Terms & Privacy Policy</p>
+            </div>
+            
+            <!-- OTP Verification Step -->
+            <div id="otpStep" class="auth-step" style="display: none;">
+                <p class="auth-subtitle">Enter the 6-digit OTP sent to <strong id="displayPhone"></strong></p>
+                <button class="change-number" id="changeNumber">Change Number</button>
+                <form id="otpForm">
+                    <div class="otp-inputs">
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                        <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="verifyOtpBtn">Verify OTP</button>
+                </form>
+                <button class="resend-otp" id="resendOtp" disabled>Resend OTP in <span id="resendTimer">30</span>s</button>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="authLoading" class="auth-loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Please wait...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Calendar Modal -->
+    <div class="booking-modal" id="bookingModal">
+        <div class="booking-modal-content">
+            <button class="booking-close" id="bookingClose" aria-label="Close">&times;</button>
+            <h2>Book Your Event</h2>
+            <p class="booking-subtitle">Select a date and time for your celebration</p>
+            
+            <!-- Calendar -->
+            <div class="booking-calendar">
+                <div class="calendar-header">
+                    <button class="calendar-nav" id="prevMonth" aria-label="Previous month">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <h3 id="currentMonth">January 2024</h3>
+                    <button class="calendar-nav" id="nextMonth" aria-label="Next month">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <div class="calendar-weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+                <div class="calendar-days" id="calendarDays"></div>
+            </div>
+            
+            <!-- Booking Details Form -->
+            <div id="bookingDetails" style="display: none;">
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label for="bookingVenue">Venue</label>
+                        <select id="bookingVenue" required>
+                            <option value="">Select Venue</option>
+                            <option value="banquet">Main Banquet Hall (Up to 1200 guests)</option>
+                            <option value="corporate">Corporate Hall (Up to 150 guests)</option>
+                            <option value="restaurant">Restaurant Party Hall (20-30 guests)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookingTime">Time</label>
+                        <select id="bookingTime" required>
+                            <option value="">Select Time</option>
+                            <option value="morning">Morning (8 AM - 12 PM)</option>
+                            <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+                            <option value="evening">Evening (4 PM - 8 PM)</option>
+                            <option value="night">Night (8 PM - 12 AM)</option>
+                            <option value="fullday">Full Day</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="guestCount">Number of Guests</label>
+                        <input type="number" id="guestCount" placeholder="Expected number of guests" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventType">Event Type</label>
+                        <select id="eventType" required>
+                            <option value="">Select Event Type</option>
+                            <option value="wedding">Wedding</option>
+                            <option value="reception">Reception</option>
+                            <option value="birthday">Birthday Party</option>
+                            <option value="corporate">Corporate Event</option>
+                            <option value="anniversary">Anniversary</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookingNotes">Additional Requirements</label>
+                        <textarea id="bookingNotes" rows="3" placeholder="Any special requirements or preferences..."></textarea>
+                    </div>
+                    <div class="booking-actions">
+                        <button type="button" class="btn btn-secondary" id="backToCalendar">Back</button>
+                        <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- WhatsApp Chat Widget -->
     <div class="whatsapp-widget">
         <!-- Chat Box -->
@@ -454,6 +602,10 @@
         </button>
     </div>
 
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/booking.js"></script>
     <script src="assets/js/script.js"></script>
 </body>
 </html>
