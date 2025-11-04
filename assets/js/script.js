@@ -31,11 +31,50 @@ const sections = document.querySelectorAll('section[id]');
 let ticking = false;
 let lastScrolled = 0;
 
+// Scroll-triggered video with smoothing
+const scrollVideoSection = document.querySelector('.scroll-video-section');
+const scrollVideo = document.querySelector('.scroll-video');
+const banquetSection = document.querySelector('#banquet');
+let currentVideoTime = 0;
+let targetVideoTime = 0;
+let isAnimating = false;
+
+if (scrollVideo) {
+    scrollVideo.addEventListener('loadedmetadata', () => {
+        scrollVideo.pause();
+        scrollVideo.currentTime = 0;
+    });
+}
+
+// Smooth video scrubbing with continuous animation
+function smoothVideoUpdate() {
+    // Only run if video is ready and has valid duration
+    if (scrollVideo && scrollVideo.readyState >= 2 && !isNaN(scrollVideo.duration)) {
+        // Lerp towards target with stronger easing
+        const diff = targetVideoTime - currentVideoTime;
+        const step = diff * 0.2; // Increased for snappier response
+        
+        currentVideoTime += step;
+        
+        try {
+            scrollVideo.currentTime = currentVideoTime;
+        } catch (e) {
+            // Ignore seek errors during loading
+        }
+    }
+    
+    // Always keep animating for smooth mouse wheel
+    requestAnimationFrame(smoothVideoUpdate);
+}
+
+// Start the continuous animation loop
+smoothVideoUpdate();
+
 function updateOnScroll() {
     const scrolled = window.pageYOffset;
     
     // Only update if scroll changed significantly (throttle DOM updates)
-    if (Math.abs(scrolled - lastScrolled) < 5) {
+    if (Math.abs(scrolled - lastScrolled) < 3) {
         ticking = false;
         return;
     }
@@ -67,6 +106,25 @@ function updateOnScroll() {
     // Parallax effect for hero video (only when visible)
     if (heroVideo && scrolled < window.innerHeight) {
         heroVideo.style.transform = `translateY(${scrolled * 0.5}px)`;
+    }
+    
+    // Scroll-triggered video scrubbing
+    if (scrollVideo && scrollVideoSection && !isNaN(scrollVideo.duration)) {
+        // Get absolute position from top of page
+        let sectionTop = 0;
+        let element = scrollVideoSection;
+        while (element) {
+            sectionTop += element.offsetTop;
+            element = element.offsetParent;
+        }
+        
+        const sectionHeight = scrollVideoSection.offsetHeight;
+        const sectionBottom = sectionTop + sectionHeight;
+        
+        if (scrolled >= sectionTop && scrolled <= sectionBottom) {
+            const scrollProgress = (scrolled - sectionTop) / sectionHeight;
+            targetVideoTime = scrollProgress * scrollVideo.duration;
+        }
     }
     
     lastScrolled = scrolled;
@@ -526,112 +584,6 @@ function restaurantDragEnd(e) {
     
     // Resume auto-rotation
     restaurantSlideInterval = setInterval(nextRestaurantSlide, 3500);
-}
-
-// ===================================
-// Banquet Image Carousel
-// ===================================
-const banquetSlides = document.querySelectorAll('.banquet-slide');
-const banquetCarousel = document.querySelector('.banquet-carousel');
-const banquetProgressBar = document.querySelector('.banquet-carousel + .carousel-progress .progress-bar');
-let currentBanquetSlide = 0;
-let banquetSlideInterval;
-let isBanquetDragging = false;
-let hasBanquetMoved = false;
-let startBanquetPos = 0;
-let currentBanquetTranslate = 0;
-
-function showBanquetSlide(index) {
-    banquetSlides.forEach((slide, i) => {
-        slide.classList.remove('active');
-        if (i === index) {
-            slide.classList.add('active');
-        }
-    });
-    
-    // Update progress bar position
-    if (banquetProgressBar) {
-        const percentage = (index * 100);
-        banquetProgressBar.style.transform = `translateX(${percentage}%)`;
-    }
-}
-
-function nextBanquetSlide() {
-    currentBanquetSlide = (currentBanquetSlide + 1) % banquetSlides.length;
-    showBanquetSlide(currentBanquetSlide);
-}
-
-// Auto-rotate every 3.5 seconds
-if (banquetSlides.length > 0) {
-    banquetSlideInterval = setInterval(nextBanquetSlide, 3500);
-}
-
-// Drag/Swipe functionality for banquet carousel
-if (banquetCarousel) {
-    // Mouse events
-    banquetCarousel.addEventListener('mousedown', banquetDragStart);
-    banquetCarousel.addEventListener('mousemove', banquetDrag);
-    banquetCarousel.addEventListener('mouseup', banquetDragEnd);
-    banquetCarousel.addEventListener('mouseleave', banquetDragEnd);
-    
-    // Touch events
-    banquetCarousel.addEventListener('touchstart', banquetDragStart, { passive: true });
-    banquetCarousel.addEventListener('touchmove', banquetDrag, { passive: true });
-    banquetCarousel.addEventListener('touchend', banquetDragEnd);
-    
-    // Prevent context menu
-    banquetCarousel.addEventListener('contextmenu', (e) => e.preventDefault());
-}
-
-function banquetDragStart(e) {
-    isBanquetDragging = true;
-    hasBanquetMoved = false;
-    startBanquetPos = getPositionX(e);
-    currentBanquetTranslate = 0;
-    clearInterval(banquetSlideInterval);
-}
-
-function banquetDrag(e) {
-    if (!isBanquetDragging) return;
-    
-    const currentPosition = getPositionX(e);
-    currentBanquetTranslate = currentPosition - startBanquetPos;
-    
-    // Mark as moved if dragged more than 5px
-    if (Math.abs(currentBanquetTranslate) > 5) {
-        hasBanquetMoved = true;
-        banquetCarousel.style.cursor = 'grabbing';
-    }
-}
-
-function banquetDragEnd(e) {
-    if (!isBanquetDragging) return;
-    
-    isBanquetDragging = false;
-    banquetCarousel.style.cursor = 'grab';
-    
-    // Only change slide if user actually dragged (not just clicked)
-    if (hasBanquetMoved) {
-        const movedBy = currentBanquetTranslate;
-        
-        // If dragged more than 50px, change slide
-        if (movedBy < -50) {
-            // Dragged left - next slide
-            currentBanquetSlide = (currentBanquetSlide + 1) % banquetSlides.length;
-            showBanquetSlide(currentBanquetSlide);
-        } else if (movedBy > 50) {
-            // Dragged right - previous slide
-            currentBanquetSlide = (currentBanquetSlide - 1 + banquetSlides.length) % banquetSlides.length;
-            showBanquetSlide(currentBanquetSlide);
-        }
-    }
-    
-    // Reset values
-    currentBanquetTranslate = 0;
-    hasBanquetMoved = false;
-    
-    // Resume auto-rotation
-    banquetSlideInterval = setInterval(nextBanquetSlide, 3500);
 }
 
 // Console message

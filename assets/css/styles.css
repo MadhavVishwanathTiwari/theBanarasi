@@ -793,6 +793,75 @@ section:nth-child(even) {
     background: linear-gradient(135deg, var(--color-white) 0%, var(--color-off-white) 50%, var(--color-white) 100%);
 }
 
+/* ===================================
+   Scroll Video Section
+   =================================== */
+
+.scroll-video-section {
+    height: 500vh;
+    position: relative;
+}
+
+.scroll-video-wrapper {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px var(--spacing-md) var(--spacing-md);
+}
+
+.scroll-video-container {
+    position: relative;
+    width: 100%;
+    max-width: 1300px;
+    height: 600px;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(92, 64, 51, 0.15);
+}
+
+.scroll-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    will-change: transform;
+}
+
+@media (max-width: 1024px) {
+    .scroll-video-wrapper {
+        padding: 90px var(--spacing-sm) var(--spacing-sm);
+    }
+    
+    .scroll-video-container {
+        height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .scroll-video-wrapper {
+        padding: 80px var(--spacing-sm) var(--spacing-sm);
+    }
+    
+    .scroll-video-container {
+        height: 450px;
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .scroll-video-wrapper {
+        padding: 70px var(--spacing-xs) var(--spacing-xs);
+    }
+    
+    .scroll-video-container {
+        height: 350px;
+        border-radius: 6px;
+    }
+}
+
 .offers-header {
     margin-bottom: var(--spacing-xl);
 }
