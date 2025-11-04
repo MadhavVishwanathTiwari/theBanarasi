@@ -22,6 +22,7 @@
                     <li><a href="#home" class="nav-link">Home</a></li>
                     <li><a href="#about" class="nav-link">About</a></li>
                     <li><a href="#restaurant" class="nav-link">Restaurant</a></li>
+                    <li><a href="#corporate" class="nav-link">Corporate</a></li>
                     <li><a href="#banquet" class="nav-link">Banquet</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li>
                     <li><a href="#contact" class="btn btn-nav">Book Event</a></li>
@@ -62,35 +63,106 @@
     <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2 class="section-title">Welcome to The Banarasi</h2>
-                    <p class="lead-text">Gandhidham's preferred destination for fine vegetarian dining and elegant celebrations.</p>
-                    <p><strong>Banarasi Banquet</strong> is designed to host your most memorable occasions, offering a perfect blend of sophistication and comfort. Our spacious, air-conditioned hall is ideal for weddings, receptions, corporate meetings, cultural events, and family functions. With modern lighting, tasteful interiors, ample parking, and personalized service, we ensure every event reflects your style.</p>
-                    <p><strong>Banarasi Multicuisine Restaurant</strong> brings you an authentic vegetarian dining experience inspired by India's rich culinary traditions. We serve a wide variety of North Indian, South Indian, Chinese, and Continental dishes, prepared with premium ingredients, aromatic spices, and utmost hygiene.</p>
-                    <div class="features">
-                        <div class="feature">
-                            <h3>Pure Vegetarian</h3>
-                            <p>Alcohol-free, smoke-free environment</p>
-                        </div>
-                        <div class="feature">
-                            <h3>Premium Quality</h3>
-                            <p>Finest ingredients, utmost hygiene</p>
-                        </div>
-                        <div class="feature">
-                            <h3>Multicuisine Excellence</h3>
-                            <p>Traditional flavors, modern presentation</p>
-                        </div>
+            <!-- Top Section: Title, Tagline -->
+            <div class="about-hero">
+                <h2 class="about-main-title">Gandhidham's Pride, Gujarat's Finest</h2>
+                <div class="about-title-divider"></div>
+                <p class="about-tagline">Banarasi has been recognized as Gandhidham's preferred destination for fine vegetarian dining and elegant celebrations, delivering exceptional experiences with warmth, tradition, and excellence.</p>
+            </div>
+            
+            <!-- Awards/Highlights Section -->
+            <div class="about-awards">
+                <div class="award-box">
+                    <h3>Pure Vegetarian Excellence</h3>
+                    <p class="award-features">Alcohol-Free • Smoke-Free • Family-Friendly</p>
+                    <p class="award-subtitle">Dignified Celebrations for Every Occasion</p>
+                </div>
+                <div class="award-ampersand">&</div>
+                <div class="award-box">
+                    <h3>Multicuisine Mastery</h3>
+                    <p class="award-features">North Indian • South Indian • Chinese • Continental</p>
+                    <p class="award-subtitle">Traditional Flavors, Modern Presentation</p>
+                </div>
+            </div>
+            
+            <!-- Description Columns -->
+            <div class="about-description">
+                <div class="about-column">
+                    <h3>Banarasi Banquet</h3>
+                    <p>Located at the heart of Gandhidham, our sprawling banquet area accommodates up to 1200 guests with majestic heights and dimensions that facilitate grandeur for every occasion. From lavish weddings to corporate events, we offer tailor-made packages, multi-cuisine catering with authentic delicacies, and complete event planning and decor services. With ample parking, valet services, fully air-conditioned facilities, and 7 AC rooms for guest accommodation, every celebration becomes extraordinary.</p>
+                </div>
+                <div class="about-column">
+                    <h3>Banarasi Restaurant</h3>
+                    <p>Experience pure vegetarian multi-cuisine dining with a capacity of 100 guests in our fully air-conditioned restaurant. We serve hygienic and healthy food with no artificial colors, ajinomoto, or palm oil. Perfect for family get-togethers, birthdays, and corporate meals, we also feature a small party hall for intimate gatherings of 20-30 guests. Our commitment to authentic flavors and premium quality ensures every meal is a memorable experience.</p>
+                </div>
+            </div>
+            
+            <!-- Full-width Image Banner Carousel -->
+            <div class="about-image-banner">
+                <div class="banner-carousel">
+                    <div class="banner-slide active">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082789/aboutUsPicture_bsabvd.jpg" 
+                             alt="Banarasi Banquet Hall - Elegant Event Space">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083521/about-2_g3jfzn.jpg" 
+                             alt="Banarasi Restaurant Interior">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083857/banquet-2_nqewdo.jpg" 
+                             alt="Banarasi Event Celebration">
+                    </div>
+                    <div class="banner-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762183423/about3_jm8d8d.jpg" 
+                             alt="Banarasi Dining Experience">
                     </div>
                 </div>
-                <div class="about-images">
-                    <div class="image-placeholder">
-                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082789/aboutUsPicture_bsabvd.jpg" 
-                             alt="Banarasi Banquet & Restaurant Interior">
+                <div class="carousel-progress">
+                    <div class="progress-bar" id="carouselProgress"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Offers Section -->
+    <section id="offers" class="offers">
+        <div class="container">
+            <div class="offers-header">
+                <div class="offers-title-wrapper">
+                    <span class="offers-line"></span>
+                    <h2 class="offers-title">Latest Offers</h2>
+                </div>
+                <p class="offers-description">Discover exceptional experiences and exclusive packages tailored for your celebrations at Banarasi Banquet & Restaurant.</p>
+            </div>
+            
+            <div class="offers-grid">
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762184817/pexels-vireshstudio-2060239_mjkp2x.jpg" alt="Wedding Package Offer">
                     </div>
-                    <div class="image-placeholder">
-                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083521/about-2_g3jfzn.jpg" 
-                             alt="Banarasi Dining Experience">
+                    <div class="offer-content">
+                        <h3>Wedding Celebrations</h3>
+                        <a href="#contact" class="offer-link">More ></a>
+                    </div>
+                </div>
+                
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762186029/pexels-mikhail-nilov-9300728_jwlwar.jpg" alt="Corporate Events Package">
+                    </div>
+                    <div class="offer-content">
+                        <h3>Corporate Events</h3>
+                        <a href="#contact" class="offer-link">More ></a>
+                    </div>
+                </div>
+                
+                <div class="offer-card">
+                    <div class="offer-image">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082869/restaurant_spd38n_ouudih.jpg" alt="Restaurant Dining Offer">
+                    </div>
+                    <div class="offer-content">
+                        <h3>Family Celebrations</h3>
+                        <a href="#contact" class="offer-link">More ></a>
                     </div>
                 </div>
             </div>
@@ -100,39 +172,95 @@
     <!-- Restaurant Section -->
     <section id="restaurant" class="restaurant">
         <div class="container">
-            <h2 class="section-title">Banarasi Restaurant</h2>
-            <p class="section-subtitle">Authentic Vegetarian Dining Experience</p>
-            <div class="restaurant-content">
-                <div class="restaurant-images">
-                    <div class="image-placeholder">
-                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082869/restaurant_spd38n_ouudih.jpg" 
-                             alt="Banarasi Restaurant Interior - Fine Vegetarian Dining">
+            <div class="restaurant-hero">
+                <h2 class="section-title">Banarasi Restaurant</h2>
+                <p class="restaurant-tagline">Pure Vegetarian Multi-Cuisine Excellence</p>
+            </div>
+
+            <div class="restaurant-description">
+                <div class="restaurant-description-col">
+                    <h3>Healthy, Hygienic, Authentic</h3>
+                    <p>Experience pure vegetarian multi-cuisine dining in our fully air-conditioned restaurant with seating for 100 guests. We serve authentic North Indian, South Indian, Chinese, and Continental dishes, crafted with premium ingredients and utmost care.</p>
+                    <p>Our commitment to health and quality means <strong>no artificial colors, no ajinomoto, and no palm oil</strong> in any of our preparations.</p>
+                </div>
+                <div class="restaurant-description-col">
+                    <p>Perfect for family get-togethers, birthdays, and corporate meals, we also offer a small party hall accommodating 20-30 guests for intimate celebrations.</p>
+                    <p>Whether dining with loved ones or hosting business lunches, our comfortable seating, attentive service, and serene ambiance create the perfect setting where every meal is served with warmth, care, and perfection.</p>
+                </div>
+            </div>
+
+            <div class="restaurant-features">
+                <div class="restaurant-feature">
+                    <strong>Capacity:</strong> 100 pax + Party Hall (20-30 pax)
+                </div>
+                <div class="restaurant-feature">
+                    <strong>Cuisine:</strong> North Indian, South Indian, Chinese, Continental
+                </div>
+                <div class="restaurant-feature">
+                    <strong>Quality:</strong> No artificial colors, ajinomoto, or palm oil
+                </div>
+                <div class="restaurant-feature">
+                    <strong>Services:</strong> Corporate meals, family gatherings, celebrations
+                </div>
+            </div>
+
+            <div class="restaurant-cta">
+                <a href="#contact" class="btn btn-primary">Reserve Table</a>
+            </div>
+
+            <div class="restaurant-image-banner">
+                <div class="restaurant-carousel">
+                    <div class="restaurant-slide active">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762081309/restaurant-2_oakzc4_t5yepk.jpg" alt="Banarasi Restaurant Interior">
                     </div>
-                    <div class="image-placeholder">
-                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762081309/restaurant-2_oakzc4_t5yepk.jpg" 
-                             alt="Banarasi Restaurant Cuisine">
+                    <div class="restaurant-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762187947/restaurant-3_sfpxm2.jpg" alt="Banarasi Restaurant Dining">
+                    </div>
+                    <div class="restaurant-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762188046/restaurant-4_esfbyw.jpg" alt="Banarasi Restaurant Cuisine">
+                    </div>
+                    <div class="restaurant-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082869/restaurant_spd38n_ouudih.jpg" alt="Banarasi Restaurant Ambiance">
                     </div>
                 </div>
-                <div class="restaurant-text">
-                    <h3>Multicuisine Excellence</h3>
-                    <p>At Banarasi Multicuisine Restaurant, we bring you an authentic vegetarian dining experience inspired by India's rich culinary traditions. We serve a wide variety of North Indian, South Indian, Chinese, and Continental dishes, prepared with premium ingredients, aromatic spices, and utmost hygiene.</p>
-                    <p>Our chefs take pride in crafting meals that balance traditional flavors with modern presentation, offering both à la carte and thali options. The restaurant's comfortable seating, attentive service, and serene ambiance make it a perfect spot for family dinners, business lunches, or casual outings.</p>
-                    <p><strong>Every meal and every moment is served with warmth, care, and perfection.</strong> Whether you're dining with loved ones or celebrating life's milestones, we promise an experience that's as fulfilling as it is memorable.</p>
-                    <div class="restaurant-features">
-                        <div class="restaurant-feature">
-                            <strong>North Indian:</strong> Authentic flavors from the heart of India
+                <div class="carousel-progress">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Corporate Hall Section -->
+    <section id="corporate" class="corporate">
+        <div class="container">
+            <h2 class="section-title">Corporate Hall</h2>
+            <p class="section-subtitle">Professional Space for Business & Events - Up to 150 Guests</p>
+            <div class="corporate-content">
+                <div class="corporate-text">
+                    <h3>Versatile Space for Every Occasion</h3>
+                    <p>Our spacious corporate hall, located within the banquet facility, accommodates up to 150 guests and is perfect for training sessions, corporate get-togethers, birthday parties, kitty parties, and karaoke events.</p>
+                    <p>Fully air-conditioned with state-of-the-art equipment including TV/projector screens and professional sound systems, we provide the ideal environment for productive meetings and memorable celebrations. Complete in-house catering services ensure your guests are well taken care of.</p>
+                    <div class="corporate-features">
+                        <div class="corporate-feature">
+                            <strong>Capacity:</strong> Up to 150 guests
                         </div>
-                        <div class="restaurant-feature">
-                            <strong>South Indian:</strong> Traditional Dosa, Idli & more
+                        <div class="corporate-feature">
+                            <strong>Equipment:</strong> TV/Projector, Sound System
                         </div>
-                        <div class="restaurant-feature">
-                            <strong>Chinese & Continental:</strong> International vegetarian favorites
+                        <div class="corporate-feature">
+                            <strong>Use Cases:</strong> Training, meetings, parties, events
                         </div>
-                        <div class="restaurant-feature">
-                            <strong>Service:</strong> À la carte & thali options available
+                        <div class="corporate-feature">
+                            <strong>Facilities:</strong> Fully AC, In-house catering
                         </div>
                     </div>
-                    <a href="#contact" class="btn btn-primary">Visit Us</a>
+                    <a href="#contact" class="btn btn-primary">Book Hall</a>
+                </div>
+                <div class="corporate-image">
+                    <div class="image-placeholder">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083522/banquet-1_zvuwe3.jpg" 
+                             alt="Corporate Hall - Professional Event Space">
+                    </div>
                 </div>
             </div>
         </div>
@@ -141,38 +269,78 @@
     <!-- Banquet Section -->
     <section id="banquet" class="banquet">
         <div class="container">
-            <h2 class="section-title">Banarasi Banquet</h2>
-            <p class="section-subtitle">Your Perfect Venue for Memorable Celebrations</p>
-            <div class="banquet-content">
-                <div class="banquet-text">
-                    <h3>Celebrate in Style & Elegance</h3>
-                    <p>Designed to host your most memorable occasions, Banarasi Banquet offers a perfect blend of sophistication and comfort. Our spacious, air-conditioned hall is ideal for weddings, receptions, corporate meetings, cultural events, and family functions, accommodating gatherings of various sizes.</p>
-                    <p>With modern lighting, tasteful interiors, ample parking, and personalized service, we ensure every event reflects your style and leaves a lasting impression. The venue maintains a pure vegetarian, alcohol-free, and smoke-free environment, ensuring a dignified and family-friendly atmosphere.</p>
-                    <div class="banquet-features">
-                        <div class="banquet-feature">
-                            <strong>Venue:</strong> Spacious, air-conditioned hall
-                        </div>
-                        <div class="banquet-feature">
-                            <strong>Services:</strong> Complete event planning & coordination
-                        </div>
-                        <div class="banquet-feature">
-                            <strong>Amenities:</strong> Modern lighting, sound system, parking
-                        </div>
-                        <div class="banquet-feature">
-                            <strong>Environment:</strong> Pure vegetarian, family-friendly
-                        </div>
-                    </div>
-                    <a href="#contact" class="btn btn-primary">Inquire Now</a>
+            <div class="banquet-hero">
+                <h2 class="section-title">Banarasi Banquet</h2>
+                <p class="banquet-tagline">Grandeur Meets Elegance - Where Celebrations Come to Life</p>
+            </div>
+
+            <div class="banquet-description">
+                <div class="banquet-description-col">
+                    <h3>Lavish Celebrations in the Heart of Gandhidham</h3>
+                    <p>Our sprawling banquet area, located at the heart of the city, features majestic heights and dimensions designed to facilitate grandeur for every occasion. From intimate gatherings to lavish weddings accommodating up to 1200 guests, we create unforgettable experiences.</p>
                 </div>
-                <div class="banquet-images">
-                    <div class="image-placeholder">
-                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083522/banquet-1_zvuwe3.jpg" 
-                             alt="Banarasi Banquet Hall - Elegant Event Venue">
+                <div class="banquet-description-col">
+                    <p>We offer complete event planning and decor services with tailor-made packages to suit each celebration. Our multi-cuisine catering serves authentic delicacies, while ample parking and valet services ensure convenience. The venue is fully air-conditioned with 7 AC guest rooms available for your comfort.</p>
+                </div>
+            </div>
+
+            <div class="banquet-features">
+                <div class="banquet-feature">
+                    <strong>Capacity:</strong> Up to 1200 guests
+                </div>
+                <div class="banquet-feature">
+                    <strong>Location:</strong> Heart of Gandhidham-Kutch
+                </div>
+                <div class="banquet-feature">
+                    <strong>Services:</strong> Event planning, decor, multi-cuisine catering
+                </div>
+                <div class="banquet-feature">
+                    <strong>Facilities:</strong> Fully AC, parking, valet, 7 AC rooms
+                </div>
+                <div class="banquet-feature">
+                    <strong>Corporate Hall:</strong> 150 pax with A/V equipment
+                </div>
+                <div class="banquet-feature">
+                    <strong>Environment:</strong> Pure vegetarian, family-friendly
+                </div>
+            </div>
+
+            <div class="banquet-cta">
+                <a href="#contact" class="btn btn-primary">Book Your Event</a>
+            </div>
+
+            <!-- Scroll-triggered video showcase -->
+            <div class="banquet-scroll-video-container" id="banquetScrollVideo">
+                <div class="scroll-video-wrapper">
+                    <video class="scroll-video" muted playsinline preload="auto">
+                        <source src="https://res.cloudinary.com/dfuzagn6o/video/upload/v1762189737/Dsc_7422_en1tnt.mp4" type="video/mp4">
+                    </video>
+                    <div class="scroll-indicator">
+                        <p>Scroll to explore</p>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </div>
-                    <div class="image-placeholder">
-                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083857/banquet-2_nqewdo.jpg" 
-                             alt="Banarasi Banquet Event Setup">
+                </div>
+            </div>
+
+            <div class="banquet-image-banner">
+                <div class="banquet-carousel">
+                    <div class="banquet-slide active">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083522/banquet-1_zvuwe3.jpg" alt="Banarasi Banquet Hall Interior">
                     </div>
+                    <div class="banquet-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083857/banquet-2_nqewdo.jpg" alt="Banarasi Banquet Event Setup">
+                    </div>
+                    <div class="banquet-slide">
+                        <img src="assets/images/banquet-3.jpg" alt="Banarasi Banquet Celebration">
+                    </div>
+                    <div class="banquet-slide">
+                        <img src="assets/images/banquet-4.jpg" alt="Banarasi Banquet Decor">
+                    </div>
+                </div>
+                <div class="carousel-progress">
+                    <div class="progress-bar"></div>
                 </div>
             </div>
         </div>
@@ -218,21 +386,23 @@
                 <div class="contact-info">
                     <div class="info-item">
                         <h3>Address</h3>
-                        <p>123 Main Street<br>City, State 12345</p>
+                        <p>Plot No. 1, Sector-1<br>Gandhidham-Kutch, Gujarat</p>
                     </div>
                     <div class="info-item">
                         <h3>Phone</h3>
-                        <p><a href="tel:+1234567890">(123) 456-7890</a></p>
+                        <p><a href="tel:+918511663766">+91 85116 63766</a><br>
+                           <a href="tel:+918511663966">+91 85116 63966</a></p>
                     </div>
                     <div class="info-item">
                         <h3>Email</h3>
-                        <p><a href="mailto:info@banarasichaiwali.com">info@banarasichaiwali.com</a></p>
+                        <p><a href="mailto:manager@thebanarasi.in">manager@thebanarasi.in</a><br>
+                           <a href="mailto:preeti@thebanarasi.in">preeti@thebanarasi.in</a></p>
                     </div>
                     <div class="info-item">
-                        <h3>Hours</h3>
-                        <p>Monday - Thursday: 11:00 AM - 10:00 PM<br>
-                           Friday - Saturday: 11:00 AM - 11:00 PM<br>
-                           Sunday: 12:00 PM - 9:00 PM</p>
+                        <h3>Visit Us</h3>
+                        <p>Open Daily<br>
+                           Restaurant & Banquet Services<br>
+                           Corporate Events Welcome</p>
                     </div>
                 </div>
             </div>

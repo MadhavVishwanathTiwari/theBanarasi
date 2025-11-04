@@ -119,7 +119,7 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observe elements for animation
 const animateElements = document.querySelectorAll(
-    '.about-text, .about-images, .restaurant-images, .restaurant-text, .banquet-text, .banquet-images, .contact-info, .contact-form'
+    '.about-hero, .about-awards, .about-description, .about-image-banner, .offers-header, .offer-card, .restaurant-images, .restaurant-text, .corporate-text, .corporate-image, .banquet-text, .banquet-images, .contact-info, .contact-form'
 );
 
 animateElements.forEach((el) => {
@@ -244,7 +244,7 @@ const whatsappChatBox = document.getElementById('whatsappChatBox');
 const whatsappClose = document.getElementById('whatsappClose');
 const whatsappInput = document.getElementById('whatsappInput');
 const whatsappSend = document.getElementById('whatsappSend');
-const whatsappNumber = '919310092139'; // Your WhatsApp number
+const whatsappNumber = '918511663766'; // Banarasi primary contact
 
 // Toggle chat box
 if (whatsappButton) {
@@ -309,6 +309,411 @@ document.addEventListener('click', (e) => {
         }
     }
 });
+
+// About Section Image Carousel
+const bannerSlides = document.querySelectorAll('.banner-slide');
+const progressBar = document.getElementById('carouselProgress');
+let currentSlide = 0;
+let slideInterval;
+
+function showSlide(index) {
+    // Remove active class from all slides
+    bannerSlides.forEach(slide => slide.classList.remove('active'));
+    
+    // Add active class to current slide
+    if (bannerSlides[index]) {
+        bannerSlides[index].classList.add('active');
+    }
+    
+    // Update progress bar position
+    if (progressBar) {
+        const percentage = (index * 100);
+        progressBar.style.transform = `translateX(${percentage}%)`;
+    }
+    
+    currentSlide = index;
+}
+
+function nextSlide() {
+    currentSlide = (currentSlide + 1) % bannerSlides.length;
+    showSlide(currentSlide);
+}
+
+// Auto-rotate every 3.5 seconds
+if (bannerSlides.length > 0) {
+    slideInterval = setInterval(nextSlide, 3500);
+}
+
+// Drag/Swipe functionality for carousel
+const bannerCarousel = document.querySelector('.banner-carousel');
+let isDragging = false;
+let hasMoved = false;
+let startPos = 0;
+let currentTranslate = 0;
+
+if (bannerCarousel) {
+    // Mouse events
+    bannerCarousel.addEventListener('mousedown', dragStart);
+    bannerCarousel.addEventListener('mousemove', drag);
+    bannerCarousel.addEventListener('mouseup', dragEnd);
+    bannerCarousel.addEventListener('mouseleave', dragEnd);
+    
+    // Touch events
+    bannerCarousel.addEventListener('touchstart', dragStart, { passive: true });
+    bannerCarousel.addEventListener('touchmove', drag, { passive: true });
+    bannerCarousel.addEventListener('touchend', dragEnd);
+    
+    // Prevent context menu
+    bannerCarousel.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+function dragStart(e) {
+    isDragging = true;
+    hasMoved = false;
+    startPos = getPositionX(e);
+    currentTranslate = 0;
+    clearInterval(slideInterval);
+}
+
+function drag(e) {
+    if (!isDragging) return;
+    
+    const currentPosition = getPositionX(e);
+    currentTranslate = currentPosition - startPos;
+    
+    // Mark as moved if dragged more than 5px
+    if (Math.abs(currentTranslate) > 5) {
+        hasMoved = true;
+        bannerCarousel.style.cursor = 'grabbing';
+    }
+}
+
+function dragEnd(e) {
+    if (!isDragging) return;
+    
+    isDragging = false;
+    bannerCarousel.style.cursor = 'grab';
+    
+    // Only change slide if user actually dragged (not just clicked)
+    if (hasMoved) {
+        const movedBy = currentTranslate;
+        
+        // If dragged more than 50px, change slide
+        if (movedBy < -50) {
+            // Dragged left - next slide
+            currentSlide = (currentSlide + 1) % bannerSlides.length;
+            showSlide(currentSlide);
+        } else if (movedBy > 50) {
+            // Dragged right - previous slide
+            currentSlide = (currentSlide - 1 + bannerSlides.length) % bannerSlides.length;
+            showSlide(currentSlide);
+        }
+    }
+    
+    // Reset values
+    currentTranslate = 0;
+    hasMoved = false;
+    
+    // Resume auto-rotation
+    slideInterval = setInterval(nextSlide, 3500);
+}
+
+function getPositionX(e) {
+    return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+}
+
+// ===================================
+// Restaurant Image Carousel
+// ===================================
+const restaurantSlides = document.querySelectorAll('.restaurant-slide');
+const restaurantCarousel = document.querySelector('.restaurant-carousel');
+const restaurantProgressBar = document.querySelector('.restaurant-carousel + .carousel-progress .progress-bar');
+let currentRestaurantSlide = 0;
+let restaurantSlideInterval;
+let isRestaurantDragging = false;
+let hasRestaurantMoved = false;
+let startRestaurantPos = 0;
+let currentRestaurantTranslate = 0;
+
+function showRestaurantSlide(index) {
+    restaurantSlides.forEach((slide, i) => {
+        slide.classList.remove('active');
+        if (i === index) {
+            slide.classList.add('active');
+        }
+    });
+    
+    // Update progress bar position
+    if (restaurantProgressBar) {
+        const percentage = (index * 100);
+        restaurantProgressBar.style.transform = `translateX(${percentage}%)`;
+    }
+}
+
+function nextRestaurantSlide() {
+    currentRestaurantSlide = (currentRestaurantSlide + 1) % restaurantSlides.length;
+    showRestaurantSlide(currentRestaurantSlide);
+}
+
+// Auto-rotate every 3.5 seconds
+if (restaurantSlides.length > 0) {
+    restaurantSlideInterval = setInterval(nextRestaurantSlide, 3500);
+}
+
+// Drag/Swipe functionality for restaurant carousel
+if (restaurantCarousel) {
+    // Mouse events
+    restaurantCarousel.addEventListener('mousedown', restaurantDragStart);
+    restaurantCarousel.addEventListener('mousemove', restaurantDrag);
+    restaurantCarousel.addEventListener('mouseup', restaurantDragEnd);
+    restaurantCarousel.addEventListener('mouseleave', restaurantDragEnd);
+    
+    // Touch events
+    restaurantCarousel.addEventListener('touchstart', restaurantDragStart, { passive: true });
+    restaurantCarousel.addEventListener('touchmove', restaurantDrag, { passive: true });
+    restaurantCarousel.addEventListener('touchend', restaurantDragEnd);
+    
+    // Prevent context menu
+    restaurantCarousel.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+function restaurantDragStart(e) {
+    isRestaurantDragging = true;
+    hasRestaurantMoved = false;
+    startRestaurantPos = getPositionX(e);
+    currentRestaurantTranslate = 0;
+    clearInterval(restaurantSlideInterval);
+}
+
+function restaurantDrag(e) {
+    if (!isRestaurantDragging) return;
+    
+    const currentPosition = getPositionX(e);
+    currentRestaurantTranslate = currentPosition - startRestaurantPos;
+    
+    // Mark as moved if dragged more than 5px
+    if (Math.abs(currentRestaurantTranslate) > 5) {
+        hasRestaurantMoved = true;
+        restaurantCarousel.style.cursor = 'grabbing';
+    }
+}
+
+function restaurantDragEnd(e) {
+    if (!isRestaurantDragging) return;
+    
+    isRestaurantDragging = false;
+    restaurantCarousel.style.cursor = 'grab';
+    
+    // Only change slide if user actually dragged (not just clicked)
+    if (hasRestaurantMoved) {
+        const movedBy = currentRestaurantTranslate;
+        
+        // If dragged more than 50px, change slide
+        if (movedBy < -50) {
+            // Dragged left - next slide
+            currentRestaurantSlide = (currentRestaurantSlide + 1) % restaurantSlides.length;
+            showRestaurantSlide(currentRestaurantSlide);
+        } else if (movedBy > 50) {
+            // Dragged right - previous slide
+            currentRestaurantSlide = (currentRestaurantSlide - 1 + restaurantSlides.length) % restaurantSlides.length;
+            showRestaurantSlide(currentRestaurantSlide);
+        }
+    }
+    
+    // Reset values
+    currentRestaurantTranslate = 0;
+    hasRestaurantMoved = false;
+    
+    // Resume auto-rotation
+    restaurantSlideInterval = setInterval(nextRestaurantSlide, 3500);
+}
+
+// ===================================
+// Banquet Image Carousel
+// ===================================
+const banquetSlides = document.querySelectorAll('.banquet-slide');
+const banquetCarousel = document.querySelector('.banquet-carousel');
+const banquetProgressBar = document.querySelector('.banquet-carousel + .carousel-progress .progress-bar');
+let currentBanquetSlide = 0;
+let banquetSlideInterval;
+let isBanquetDragging = false;
+let hasBanquetMoved = false;
+let startBanquetPos = 0;
+let currentBanquetTranslate = 0;
+
+function showBanquetSlide(index) {
+    banquetSlides.forEach((slide, i) => {
+        slide.classList.remove('active');
+        if (i === index) {
+            slide.classList.add('active');
+        }
+    });
+    
+    // Update progress bar position
+    if (banquetProgressBar) {
+        const percentage = (index * 100);
+        banquetProgressBar.style.transform = `translateX(${percentage}%)`;
+    }
+}
+
+function nextBanquetSlide() {
+    currentBanquetSlide = (currentBanquetSlide + 1) % banquetSlides.length;
+    showBanquetSlide(currentBanquetSlide);
+}
+
+// Auto-rotate every 3.5 seconds
+if (banquetSlides.length > 0) {
+    banquetSlideInterval = setInterval(nextBanquetSlide, 3500);
+}
+
+// Drag/Swipe functionality for banquet carousel
+if (banquetCarousel) {
+    // Mouse events
+    banquetCarousel.addEventListener('mousedown', banquetDragStart);
+    banquetCarousel.addEventListener('mousemove', banquetDrag);
+    banquetCarousel.addEventListener('mouseup', banquetDragEnd);
+    banquetCarousel.addEventListener('mouseleave', banquetDragEnd);
+    
+    // Touch events
+    banquetCarousel.addEventListener('touchstart', banquetDragStart, { passive: true });
+    banquetCarousel.addEventListener('touchmove', banquetDrag, { passive: true });
+    banquetCarousel.addEventListener('touchend', banquetDragEnd);
+    
+    // Prevent context menu
+    banquetCarousel.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+function banquetDragStart(e) {
+    isBanquetDragging = true;
+    hasBanquetMoved = false;
+    startBanquetPos = getPositionX(e);
+    currentBanquetTranslate = 0;
+    clearInterval(banquetSlideInterval);
+}
+
+function banquetDrag(e) {
+    if (!isBanquetDragging) return;
+    
+    const currentPosition = getPositionX(e);
+    currentBanquetTranslate = currentPosition - startBanquetPos;
+    
+    // Mark as moved if dragged more than 5px
+    if (Math.abs(currentBanquetTranslate) > 5) {
+        hasBanquetMoved = true;
+        banquetCarousel.style.cursor = 'grabbing';
+    }
+}
+
+function banquetDragEnd(e) {
+    if (!isBanquetDragging) return;
+    
+    isBanquetDragging = false;
+    banquetCarousel.style.cursor = 'grab';
+    
+    // Only change slide if user actually dragged (not just clicked)
+    if (hasBanquetMoved) {
+        const movedBy = currentBanquetTranslate;
+        
+        // If dragged more than 50px, change slide
+        if (movedBy < -50) {
+            // Dragged left - next slide
+            currentBanquetSlide = (currentBanquetSlide + 1) % banquetSlides.length;
+            showBanquetSlide(currentBanquetSlide);
+        } else if (movedBy > 50) {
+            // Dragged right - previous slide
+            currentBanquetSlide = (currentBanquetSlide - 1 + banquetSlides.length) % banquetSlides.length;
+            showBanquetSlide(currentBanquetSlide);
+        }
+    }
+    
+    // Reset values
+    currentBanquetTranslate = 0;
+    hasBanquetMoved = false;
+    
+    // Resume auto-rotation
+    banquetSlideInterval = setInterval(nextBanquetSlide, 3500);
+}
+
+// ===================================
+// Scroll-triggered Video (Banquet Section)
+// ===================================
+const scrollVideoContainer = document.getElementById('banquetScrollVideo');
+const scrollVideo = document.querySelector('.scroll-video');
+const scrollIndicator = document.querySelector('.scroll-indicator');
+
+if (scrollVideoContainer && scrollVideo) {
+    let videoLoaded = false;
+    let lastProgress = -1;
+    let isVideoReady = false;
+    
+    // Preload video properly
+    scrollVideo.preload = 'auto';
+    
+    // Load video metadata and ensure it's ready
+    scrollVideo.addEventListener('loadedmetadata', () => {
+        videoLoaded = true;
+        // Set initial frame
+        scrollVideo.currentTime = 0;
+    });
+    
+    scrollVideo.addEventListener('loadeddata', () => {
+        isVideoReady = true;
+    });
+    
+    // Force load
+    scrollVideo.load();
+    
+    // Handle scroll with precise frame tracking
+    function handleScrollVideo() {
+        if (!videoLoaded || !isVideoReady) return;
+        
+        const containerRect = scrollVideoContainer.getBoundingClientRect();
+        const containerHeight = scrollVideoContainer.offsetHeight;
+        const viewportHeight = window.innerHeight;
+        
+        // Calculate scroll progress through the container
+        const scrollProgress = Math.max(0, Math.min(1, 
+            (viewportHeight - containerRect.top) / (containerHeight + viewportHeight)
+        ));
+        
+        // Update video current time based on scroll progress - NO SKIPPING
+        const videoDuration = scrollVideo.duration;
+        const targetTime = scrollProgress * videoDuration;
+        
+        // Always update to exact frame position for smooth playback
+        try {
+            scrollVideo.currentTime = targetTime;
+        } catch (e) {
+            // Suppress seeking errors
+            console.warn('Video seek error:', e);
+        }
+        
+        // Hide scroll indicator after user starts scrolling
+        if (scrollProgress > 0.05 && scrollIndicator) {
+            scrollIndicator.classList.add('hidden');
+        } else if (scrollProgress < 0.02 && scrollIndicator) {
+            scrollIndicator.classList.remove('hidden');
+        }
+    }
+    
+    // Use requestAnimationFrame for smooth updates
+    let ticking = false;
+    
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                handleScrollVideo();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
+    
+    // Initial check after a short delay to ensure video is loaded
+    setTimeout(() => {
+        handleScrollVideo();
+    }, 100);
+}
 
 // Console message
 console.log('%cBanarasi Banquet & Restaurant', 'color: #8B6F47; font-size: 20px; font-weight: bold;');
