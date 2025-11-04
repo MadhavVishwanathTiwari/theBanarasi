@@ -53,7 +53,7 @@ function setVideoTrackVars() {
     const viewportH = window.innerHeight;
     // Position sticky a bit lower on phones so the pin feels anchored mid-viewport
     const stickyTopOffset = (window.innerWidth <= 768)
-        ? Math.round(viewportH * 0.22) // ~22vh on mobile
+        ? Math.round(viewportH * 0.30) // ~30vh on mobile
         : 80;
     root.style.setProperty('--stickyTop', stickyTopOffset + 'px');
     // Estimate desired pin distance: scale with duration and viewport

@@ -810,6 +810,8 @@ section:nth-child(even) {
 /* Internal pin track inside the Banquet section */
 .pin-track {
     height: var(--pinTrackH, 1600px);
+    margin-top: calc(-1 * var(--stickyTop, 80px));
+    padding-top: var(--stickyTop, 80px);
 }
 
 .pin-sticky {
