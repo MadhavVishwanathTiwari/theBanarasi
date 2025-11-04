@@ -755,54 +755,6 @@ section:nth-child(even) {
 }
 
 /* ===================================
-   Corporate Hall Section
-   =================================== */
-
-.corporate {
-    background: linear-gradient(to bottom right, var(--color-white) 0%, var(--color-cream) 100%);
-}
-
-.corporate-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-xl);
-    align-items: center;
-}
-
-.corporate-text h3 {
-    font-size: 2rem;
-    margin-bottom: var(--spacing-md);
-    color: var(--color-dark-brown);
-}
-
-.corporate-text p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: var(--color-gray-dark);
-    margin-bottom: var(--spacing-md);
-}
-
-.corporate-features {
-    display: grid;
-    gap: var(--spacing-sm);
-    margin: var(--spacing-lg) 0;
-}
-
-.corporate-feature {
-    padding: var(--spacing-sm);
-    background-color: var(--color-off-white);
-    border-left: 3px solid var(--color-dark-brown);
-}
-
-.corporate-feature strong {
-    color: var(--color-dark-brown);
-}
-
-.corporate-image .image-placeholder {
-    min-height: 400px;
-}
-
-/* ===================================
    Gallery Section
    =================================== */
 

@@ -119,7 +119,7 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observe elements for animation
 const animateElements = document.querySelectorAll(
-    '.about-hero, .about-awards, .about-description, .about-image-banner, .offers-header, .offer-card, .restaurant-images, .restaurant-text, .corporate-text, .corporate-image, .banquet-text, .banquet-images, .contact-info, .contact-form'
+    '.about-hero, .about-awards, .about-description, .about-image-banner, .offers-header, .offer-card, .restaurant-images, .restaurant-text, .banquet-text, .banquet-images, .contact-info, .contact-form'
 );
 
 animateElements.forEach((el) => {
