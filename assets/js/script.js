@@ -50,10 +50,18 @@ function setVideoTrackVars() {
     const container = document.querySelector('.scroll-video-container');
     const stickyH = container ? container.offsetHeight : 0;
     root.style.setProperty('--stickyH', stickyH + 'px');
-    // Provide a generous track distance based on viewport
     const viewportH = window.innerHeight;
-    const desired = Math.max(220, Math.round(viewportH * 4)); // ~400vh on tall screens
-    root.style.setProperty('--video-track-height', desired + 'px');
+    const stickyTopOffset = 80;
+    // Estimate desired pin distance: scale with duration and viewport
+    let seconds = 8;
+    if (scrollVideo && !isNaN(scrollVideo.duration)) seconds = scrollVideo.duration;
+    const pxPerSec = 350; // tune for feel
+    const baseDistance = seconds * pxPerSec;
+    const minDistance = viewportH * (window.innerWidth <= 768 ? 3.5 : 4.5);
+    const pinDistanceDesired = Math.max(baseDistance, minDistance);
+    // Track height must include the part where sticky is visible but not pinned
+    const trackHeight = Math.round(pinDistanceDesired + (viewportH - stickyTopOffset));
+    root.style.setProperty('--video-track-height', trackHeight + 'px');
 }
 
 if (document.readyState === 'loading') {
@@ -196,9 +204,10 @@ function updateOnScroll() {
         const viewportH = window.innerHeight;
         const stickyTopOffset = 80; // matches CSS top on sticky
 
-        // Use the entire track length for progress mapping; simple and robust
-        const effectiveDistance = trackHeight;
-        const start = trackTop - stickyTopOffset; // start slightly before the wrapper pins
+        // Use only the pin distance (track minus visible slack) to avoid blank bottom
+        const pinDistance = Math.max(1, trackHeight - (viewportH - stickyTopOffset));
+        const effectiveDistance = pinDistance;
+        const start = trackTop - stickyTopOffset; // start where pinning begins
         const end = start + effectiveDistance;
 
         if (scrolled >= start && scrolled <= end) {

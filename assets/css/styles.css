@@ -1994,7 +1994,7 @@ section:nth-child(even) {
 /* Video track section to pin the scroll video below Banquet while overlapping */
 .video-track {
     position: relative;
-    min-height: var(--video-track-height, 220vh);
+    height: var(--video-track-height, 220vh);
     margin-top: calc(-1 * var(--stickyH, 0px));
     padding-top: var(--stickyH, 0px);
     z-index: 0;
