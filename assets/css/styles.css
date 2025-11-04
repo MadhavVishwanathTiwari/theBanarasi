@@ -877,6 +877,11 @@ section:nth-child(even) {
     .scroll-video-container {
         height: clamp(380px, 80vh, 900px);
     }
+    /* Keep the video vertically centred on phones */
+    .pin-sticky {
+        top: 50vh;
+        transform: translateY(-50%);
+    }
 }
 
 @media (max-width: 480px) {
