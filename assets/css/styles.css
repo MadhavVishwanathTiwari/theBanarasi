@@ -2005,3 +2005,12 @@ section:nth-child(even) {
     z-index: 1;
 }
 
+/* Sticky cap to retain the top area while the video is pinned */
+.video-track-cap {
+    position: sticky;
+    top: 0;
+    height: var(--stickyTop, 80px);
+    background: var(--color-off-white);
+    z-index: 0;
+}
+
