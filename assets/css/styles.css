@@ -1614,6 +1614,8 @@ section:nth-child(even) {
     
     .award-ampersand {
         font-size: 2rem;
+        text-align: center;
+        width: 100%;
     }
     
     .about-description {
