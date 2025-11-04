@@ -849,7 +849,7 @@ section:nth-child(even) {
 .scroll-video-container {
     position: relative;
     width: 100%;
-    height: 600px;
+    height: clamp(380px, 80vh, 900px);
     overflow: hidden;
     border-radius: 8px;
     box-shadow: 0 10px 40px rgba(92, 64, 51, 0.15);
@@ -865,7 +865,7 @@ section:nth-child(even) {
 
 @media (max-width: 1024px) {
     .scroll-video-container {
-        height: 500px;
+        height: clamp(380px, 80vh, 900px);
     }
 }
 
@@ -875,13 +875,13 @@ section:nth-child(even) {
     }
     
     .scroll-video-container {
-        height: 400px;
+        height: clamp(380px, 80vh, 900px);
     }
 }
 
 @media (max-width: 480px) {
     .scroll-video-container {
-        height: 500px;
+        height: clamp(380px, 80vh, 900px);
     }
 }
 
