@@ -852,6 +852,10 @@ section:nth-child(even) {
 }
 
 @media (max-width: 480px) {
+    .scroll-video-section {
+        height: 300vh;
+    }
+    
     .scroll-video-wrapper {
         padding: 70px var(--spacing-xs) var(--spacing-xs);
     }
@@ -1737,8 +1741,13 @@ section:nth-child(even) {
     }
     
     .banquet-features {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: var(--spacing-sm);
+    }
+    
+    .banquet-feature {
+        padding: var(--spacing-sm);
+        font-size: 0.85rem;
     }
     
     .banquet-image-banner {
