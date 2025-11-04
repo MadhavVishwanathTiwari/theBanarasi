@@ -824,18 +824,6 @@ section:nth-child(even) {
 }
 
 /* Keep a small header/CTA stuck above the video while pinning */
-.pin-sticky-top {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    background: var(--color-off-white);
-    padding: var(--spacing-sm) 0;
-}
-
-/* Desktop: don't keep an extra sticky header; avoid white band */
-@media (min-width: 1024px) {
-    .pin-sticky-top { display: none; }
-}
 
 .scroll-video-wrapper {
     position: sticky;
@@ -876,11 +864,6 @@ section:nth-child(even) {
     
     .scroll-video-container {
         height: clamp(380px, 80vh, 900px);
-    }
-    /* Keep the video vertically centred on phones */
-    .pin-sticky {
-        top: 50vh;
-        transform: translateY(-50%);
     }
 }
 
