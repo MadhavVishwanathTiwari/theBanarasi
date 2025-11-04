@@ -219,10 +219,16 @@ function updateOnScroll() {
             const progress = (scrolled - start) / effectiveDistance;
             const clamped = Math.max(0, Math.min(1, progress));
             targetVideoTime = clamped * scrollVideo.duration;
+            // Grow overlap while scrolling to keep seam tight
+            const extraOverlap = Math.min(stickyTopOffset, (scrolled - start));
+            document.documentElement.style.setProperty('--videoOverlap', (stickyTopOffset + extraOverlap) + 'px');
         } else if (scrolled < start) {
             targetVideoTime = 0;
+            document.documentElement.style.setProperty('--videoOverlap', stickyTopOffset + 'px');
         } else if (scrolled > end) {
             targetVideoTime = scrollVideo.duration;
+            // lock to max so after unpin there is no gap
+            document.documentElement.style.setProperty('--videoOverlap', (stickyTopOffset * 2) + 'px');
         }
     }
     
