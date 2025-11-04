@@ -823,6 +823,20 @@ section:nth-child(even) {
     z-index: 1;
 }
 
+/* Keep a small header/CTA stuck above the video while pinning */
+.pin-sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--color-off-white);
+    padding: var(--spacing-sm) 0;
+}
+
+/* Desktop: don't keep an extra sticky header; avoid white band */
+@media (min-width: 1024px) {
+    .pin-sticky-top { display: none; }
+}
+
 .scroll-video-wrapper {
     position: sticky;
     top: var(--stickyTop, 80px);
