@@ -1995,8 +1995,8 @@ section:nth-child(even) {
 .video-track {
     position: relative;
     height: var(--video-track-height, 220vh);
-    margin-top: calc(-1 * var(--stickyH, 0px));
-    padding-top: var(--stickyH, 0px);
+    margin-top: calc(-1 * var(--stickyTop, 80px));
+    padding-top: var(--stickyTop, 80px);
     z-index: 0;
 }
 
