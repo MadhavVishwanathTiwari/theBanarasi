@@ -496,7 +496,8 @@ section:nth-child(even) {
     line-height: 1.2;
 }
 
-.about-title-divider {
+.about-title-divider,
+.section-title-divider {
     width: 100px;
     height: 3px;
     background: linear-gradient(to right, transparent, var(--color-medium-brown), transparent);
