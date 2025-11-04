@@ -35,24 +35,85 @@ let lastScrolled = 0;
 const scrollVideoSection = document.querySelector('.scroll-video-section');
 const scrollVideo = document.querySelector('.scroll-video');
 const banquetSection = document.querySelector('#banquet');
+const scrollVideoWrapper = document.querySelector('.scroll-video-wrapper');
+const videoTrack = document.querySelector('.video-track');
 let currentVideoTime = 0;
 let targetVideoTime = 0;
 let isAnimating = false;
-let videoPlaceholder = null;
+let virtualProgress = 0; // 0..1 wheel-driven progress
+const enableWheelScrub = false;
+const slowScrollFactor = 0.18; // scale wheel speed while video is pinned
+
+// Set CSS variables for overlap and track height
+function setVideoTrackVars() {
+    const root = document.documentElement;
+    const container = document.querySelector('.scroll-video-container');
+    const stickyH = container ? container.offsetHeight : 0;
+    root.style.setProperty('--stickyH', stickyH + 'px');
+    // Provide a generous track distance based on viewport
+    const viewportH = window.innerHeight;
+    const desired = Math.max(220, Math.round(viewportH * 4)); // ~400vh on tall screens
+    root.style.setProperty('--video-track-height', desired + 'px');
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setVideoTrackVars);
+} else {
+    setVideoTrackVars();
+}
+window.addEventListener('resize', setVideoTrackVars);
 
 if (scrollVideo) {
     scrollVideo.addEventListener('loadedmetadata', () => {
         scrollVideo.pause();
         scrollVideo.currentTime = 0;
     });
-    
-    // Create placeholder element
-    const videoContainer = document.querySelector('.scroll-video-container');
-    if (videoContainer) {
-        videoPlaceholder = document.createElement('div');
-        videoPlaceholder.className = 'scroll-video-placeholder';
-        videoContainer.parentNode.insertBefore(videoPlaceholder, videoContainer);
-    }
+}
+
+// Wheel-driven scrubbing (disabled by default to avoid buggy scrolling)
+if (enableWheelScrub && scrollVideoWrapper && scrollVideo) {
+    let wheelIdleTimer;
+    scrollVideoWrapper.addEventListener('wheel', (e) => {
+        if (isNaN(scrollVideo.duration)) return;
+        const atStart = virtualProgress <= 0.0001;
+        const atEnd = virtualProgress >= 0.9999;
+        const scrollingUp = e.deltaY < 0;
+        const scrollingDown = e.deltaY > 0;
+        // Allow default page scroll when at edges and user keeps going outward
+        if ((atStart && scrollingUp) || (atEnd && scrollingDown)) {
+            return; // let page scroll
+        }
+        // Otherwise lock page scroll and scrub video
+        e.preventDefault();
+        // deltaMode: 0=pixel, 1=line, 2=page
+        const unitScale = (e.deltaMode === 1) ? 0.03 : 0.00022; // small for ~2+ wheel revolutions
+        virtualProgress += e.deltaY * unitScale;
+        if (virtualProgress < 0) virtualProgress = 0;
+        if (virtualProgress > 1) virtualProgress = 1;
+        targetVideoTime = virtualProgress * scrollVideo.duration;
+        // idle timer to release quickly after interaction
+        clearTimeout(wheelIdleTimer);
+        wheelIdleTimer = setTimeout(() => { /* no-op, just end of active scrubbing */ }, 150);
+    }, { passive: false });
+}
+
+// Slow down native scroll only while the sticky video is active (using video track)
+if (false && scrollVideoWrapper && scrollVideo && videoTrack) {
+    const getAbsoluteTop = (el) => { let t = 0, n = el; while (n) { t += n.offsetTop || 0; n = n.offsetParent; } return t; };
+    scrollVideoWrapper.addEventListener('wheel', (e) => {
+        const viewportH = window.innerHeight;
+        const stickyTopOffset = 80;
+        const trackTop = getAbsoluteTop(videoTrack);
+        const trackHeight = videoTrack.offsetHeight;
+        const pinDistance = Math.max(0, trackHeight - (viewportH - stickyTopOffset));
+        const start = trackTop - stickyTopOffset;
+        const end = start + pinDistance;
+        const scrolled = window.pageYOffset;
+        if (scrolled >= start && scrolled <= end) {
+            e.preventDefault();
+            window.scrollBy(0, e.deltaY * slowScrollFactor);
+        }
+    }, { passive: false });
 }
 
 // Smooth video scrubbing with continuous animation
@@ -61,7 +122,7 @@ function smoothVideoUpdate() {
     if (scrollVideo && scrollVideo.readyState >= 2 && !isNaN(scrollVideo.duration)) {
         // Lerp towards target with stronger easing
         const diff = targetVideoTime - currentVideoTime;
-        const step = diff * 0.2; // Increased for snappier response
+        const step = diff * 0.1; // slower easing for smoother/less jumpy motion
         
         currentVideoTime += step;
         
@@ -117,59 +178,37 @@ function updateOnScroll() {
         heroVideo.style.transform = `translateY(${scrolled * 0.5}px)`;
     }
     
-    // Scroll-triggered video scrubbing with dynamic pinning (Apple-style)
-    if (scrollVideo && scrollVideoSection && !isNaN(scrollVideo.duration)) {
-        const videoContainer = document.querySelector('.scroll-video-container');
-        const wrapper = document.querySelector('.scroll-video-wrapper');
-        
-        if (videoContainer && wrapper) {
-            // Get wrapper position
-            let wrapperTop = 0;
-            let element = wrapper;
-            while (element) {
-                wrapperTop += element.offsetTop;
-                element = element.offsetParent;
+    // Scroll-triggered video scrubbing (mapped to the full video track)
+    if (scrollVideo && videoTrack && !isNaN(scrollVideo.duration)) {
+        // Absolute position helpers
+        const getAbsoluteTop = (el) => {
+            let top = 0;
+            let node = el;
+            while (node) {
+                top += node.offsetTop || 0;
+                node = node.offsetParent;
             }
-            
-            const wrapperHeight = wrapper.offsetHeight;
-            const wrapperBottom = wrapperTop + wrapperHeight;
-            const containerHeight = videoContainer.offsetHeight;
-            
-            // Define pin range
-            const pinStart = wrapperTop;
-            const pinEnd = wrapperBottom - containerHeight;
-            
-            // Pin/unpin logic
-            if (scrolled >= pinStart && scrolled <= pinEnd) {
-                // Pin the video
-                if (!videoContainer.classList.contains('pinned')) {
-                    videoContainer.classList.add('pinned');
-                    // Show placeholder to maintain space
-                    if (videoPlaceholder) {
-                        videoPlaceholder.style.display = 'block';
-                    }
-                }
-                
-                // Calculate video progress
-                const scrollProgress = (scrolled - pinStart) / (pinEnd - pinStart);
-                targetVideoTime = scrollProgress * scrollVideo.duration;
-            } else {
-                // Unpin
-                if (videoContainer.classList.contains('pinned')) {
-                    videoContainer.classList.remove('pinned');
-                    // Hide placeholder
-                    if (videoPlaceholder) {
-                        videoPlaceholder.style.display = 'none';
-                    }
-                }
-                
-                // Clamp video time at ends
-                if (scrolled < pinStart) {
-                    targetVideoTime = 0;
-                } else if (scrolled > pinEnd) {
-                    targetVideoTime = scrollVideo.duration;
-                }
-            }
+            return top;
+        };
+
+        const trackTop = getAbsoluteTop(videoTrack);
+        const trackHeight = Math.max(1, videoTrack.offsetHeight);
+        const viewportH = window.innerHeight;
+        const stickyTopOffset = 80; // matches CSS top on sticky
+
+        // Use the entire track length for progress mapping; simple and robust
+        const effectiveDistance = trackHeight;
+        const start = trackTop - stickyTopOffset; // start slightly before the wrapper pins
+        const end = start + effectiveDistance;
+
+        if (scrolled >= start && scrolled <= end) {
+            const progress = (scrolled - start) / effectiveDistance;
+            const clamped = Math.max(0, Math.min(1, progress));
+            targetVideoTime = clamped * scrollVideo.duration;
+        } else if (scrolled < start) {
+            targetVideoTime = 0;
+        } else if (scrolled > end) {
+            targetVideoTime = scrollVideo.duration;
         }
     }
     
