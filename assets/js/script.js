@@ -38,12 +38,21 @@ const banquetSection = document.querySelector('#banquet');
 let currentVideoTime = 0;
 let targetVideoTime = 0;
 let isAnimating = false;
+let videoPlaceholder = null;
 
 if (scrollVideo) {
     scrollVideo.addEventListener('loadedmetadata', () => {
         scrollVideo.pause();
         scrollVideo.currentTime = 0;
     });
+    
+    // Create placeholder element
+    const videoContainer = document.querySelector('.scroll-video-container');
+    if (videoContainer) {
+        videoPlaceholder = document.createElement('div');
+        videoPlaceholder.className = 'scroll-video-placeholder';
+        videoContainer.parentNode.insertBefore(videoPlaceholder, videoContainer);
+    }
 }
 
 // Smooth video scrubbing with continuous animation
@@ -133,14 +142,26 @@ function updateOnScroll() {
             // Pin/unpin logic
             if (scrolled >= pinStart && scrolled <= pinEnd) {
                 // Pin the video
-                videoContainer.classList.add('pinned');
+                if (!videoContainer.classList.contains('pinned')) {
+                    videoContainer.classList.add('pinned');
+                    // Show placeholder to maintain space
+                    if (videoPlaceholder) {
+                        videoPlaceholder.style.display = 'block';
+                    }
+                }
                 
                 // Calculate video progress
                 const scrollProgress = (scrolled - pinStart) / (pinEnd - pinStart);
                 targetVideoTime = scrollProgress * scrollVideo.duration;
             } else {
                 // Unpin
-                videoContainer.classList.remove('pinned');
+                if (videoContainer.classList.contains('pinned')) {
+                    videoContainer.classList.remove('pinned');
+                    // Hide placeholder
+                    if (videoPlaceholder) {
+                        videoPlaceholder.style.display = 'none';
+                    }
+                }
                 
                 // Clamp video time at ends
                 if (scrolled < pinStart) {
