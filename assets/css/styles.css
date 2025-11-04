@@ -841,6 +841,8 @@ section:nth-child(even) {
 
 @media (max-width: 768px) {
     .scroll-video-wrapper {
+        top: 50vh;
+        transform: translateY(-50%);
         padding: 0 var(--spacing-sm);
     }
     
@@ -850,6 +852,11 @@ section:nth-child(even) {
 }
 
 @media (max-width: 480px) {
+    .scroll-video-wrapper {
+        top: 50vh;
+        transform: translateY(-50%);
+    }
+    
     .scroll-video-container {
         height: 400px;
     }

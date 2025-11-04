@@ -202,7 +202,8 @@ function updateOnScroll() {
         const trackTop = getAbsoluteTop(videoTrack);
         const trackHeight = Math.max(1, videoTrack.offsetHeight);
         const viewportH = window.innerHeight;
-        const stickyTopOffset = 80; // matches CSS top on sticky
+        // Matches CSS: 80px on desktop, 50vh (centered) on mobile
+        const stickyTopOffset = window.innerWidth <= 768 ? viewportH * 0.5 : 80;
 
         // Use only the pin distance (track minus visible slack) to avoid blank bottom
         const pinDistance = Math.max(1, trackHeight - (viewportH - stickyTopOffset));
