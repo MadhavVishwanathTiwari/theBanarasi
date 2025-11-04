@@ -798,18 +798,18 @@ section:nth-child(even) {
    =================================== */
 
 .scroll-video-section {
-    height: 250vh;
     position: relative;
+    padding: var(--spacing-xl) 0;
 }
 
 .scroll-video-wrapper {
-    position: sticky;
-    top: 0;
-    height: 100vh;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    min-height: 300vh;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 100px var(--spacing-md) var(--spacing-md);
+    align-items: flex-start;
+    padding-top: 10vh;
 }
 
 .scroll-video-container {
@@ -820,6 +820,15 @@ section:nth-child(even) {
     overflow: hidden;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(92, 64, 51, 0.15);
+    margin: 0 auto;
+}
+
+.scroll-video-container.pinned {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
 }
 
 .scroll-video {
@@ -831,12 +840,8 @@ section:nth-child(even) {
 }
 
 @media (max-width: 1024px) {
-    .scroll-video-section {
-        height: 220vh;
-    }
-    
     .scroll-video-wrapper {
-        padding: 90px var(--spacing-sm) var(--spacing-sm);
+        min-height: 250vh;
     }
     
     .scroll-video-container {
@@ -845,12 +850,10 @@ section:nth-child(even) {
 }
 
 @media (max-width: 768px) {
-    .scroll-video-section {
-        height: 200vh;
-    }
-    
     .scroll-video-wrapper {
-        padding: 80px var(--spacing-sm) var(--spacing-sm);
+        padding: 0 var(--spacing-sm);
+        min-height: 220vh;
+        padding-top: 8vh;
     }
     
     .scroll-video-container {
@@ -860,12 +863,9 @@ section:nth-child(even) {
 }
 
 @media (max-width: 480px) {
-    .scroll-video-section {
-        height: 180vh;
-    }
-    
     .scroll-video-wrapper {
-        padding: 70px var(--spacing-xs) var(--spacing-xs);
+        min-height: 200vh;
+        padding-top: 6vh;
     }
     
     .scroll-video-container {

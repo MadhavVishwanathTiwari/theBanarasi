@@ -108,22 +108,47 @@ function updateOnScroll() {
         heroVideo.style.transform = `translateY(${scrolled * 0.5}px)`;
     }
     
-    // Scroll-triggered video scrubbing
+    // Scroll-triggered video scrubbing with dynamic pinning (Apple-style)
     if (scrollVideo && scrollVideoSection && !isNaN(scrollVideo.duration)) {
-        // Get absolute position from top of page
-        let sectionTop = 0;
-        let element = scrollVideoSection;
-        while (element) {
-            sectionTop += element.offsetTop;
-            element = element.offsetParent;
-        }
+        const videoContainer = document.querySelector('.scroll-video-container');
+        const wrapper = document.querySelector('.scroll-video-wrapper');
         
-        const sectionHeight = scrollVideoSection.offsetHeight;
-        const sectionBottom = sectionTop + sectionHeight;
-        
-        if (scrolled >= sectionTop && scrolled <= sectionBottom) {
-            const scrollProgress = (scrolled - sectionTop) / sectionHeight;
-            targetVideoTime = scrollProgress * scrollVideo.duration;
+        if (videoContainer && wrapper) {
+            // Get wrapper position
+            let wrapperTop = 0;
+            let element = wrapper;
+            while (element) {
+                wrapperTop += element.offsetTop;
+                element = element.offsetParent;
+            }
+            
+            const wrapperHeight = wrapper.offsetHeight;
+            const wrapperBottom = wrapperTop + wrapperHeight;
+            const containerHeight = videoContainer.offsetHeight;
+            
+            // Define pin range
+            const pinStart = wrapperTop;
+            const pinEnd = wrapperBottom - containerHeight;
+            
+            // Pin/unpin logic
+            if (scrolled >= pinStart && scrolled <= pinEnd) {
+                // Pin the video
+                videoContainer.classList.add('pinned');
+                
+                // Calculate video progress
+                const scrollProgress = (scrolled - pinStart) / (pinEnd - pinStart);
+                targetVideoTime = scrollProgress * scrollVideo.duration;
+            } else {
+                // Unpin
+                videoContainer.classList.remove('pinned');
+                
+                // Clamp video time at ends
+                if (scrolled < pinStart) {
+                    targetVideoTime = 0;
+                } else if (scrolled > pinEnd) {
+                    targetVideoTime = scrollVideo.duration;
+                }
+            }
         }
     }
     
