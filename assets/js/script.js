@@ -51,7 +51,11 @@ function setVideoTrackVars() {
     const stickyH = container ? container.offsetHeight : 0;
     root.style.setProperty('--stickyH', stickyH + 'px');
     const viewportH = window.innerHeight;
-    const stickyTopOffset = 80;
+    // Position sticky a bit lower on phones so the pin feels anchored mid-viewport
+    const stickyTopOffset = (window.innerWidth <= 768)
+        ? Math.round(viewportH * 0.22) // ~22vh on mobile
+        : 80;
+    root.style.setProperty('--stickyTop', stickyTopOffset + 'px');
     // Estimate desired pin distance: scale with duration and viewport
     let seconds = 8;
     if (scrollVideo && !isNaN(scrollVideo.duration)) seconds = scrollVideo.duration;
@@ -202,8 +206,8 @@ function updateOnScroll() {
         const trackTop = getAbsoluteTop(videoTrack);
         const trackHeight = Math.max(1, videoTrack.offsetHeight);
         const viewportH = window.innerHeight;
-        // Matches CSS: 80px on desktop, 50vh (centered) on mobile
-        const stickyTopOffset = window.innerWidth <= 768 ? viewportH * 0.5 : 80;
+        const cssSticky = getComputedStyle(document.documentElement).getPropertyValue('--stickyTop').trim();
+        const stickyTopOffset = cssSticky ? parseFloat(cssSticky) : 80; // matches CSS top on sticky
 
         // Use only the pin distance (track minus visible slack) to avoid blank bottom
         const pinDistance = Math.max(1, trackHeight - (viewportH - stickyTopOffset));
