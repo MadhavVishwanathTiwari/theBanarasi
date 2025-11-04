@@ -865,7 +865,7 @@ section:nth-child(even) {
 
 @media (max-width: 480px) {
     .scroll-video-container {
-        height: 400px;
+        height: 500px;
     }
 }
 
