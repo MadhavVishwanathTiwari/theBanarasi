@@ -798,7 +798,7 @@ section:nth-child(even) {
    =================================== */
 
 .scroll-video-section {
-    height: 500vh;
+    height: 250vh;
     position: relative;
 }
 
@@ -831,6 +831,10 @@ section:nth-child(even) {
 }
 
 @media (max-width: 1024px) {
+    .scroll-video-section {
+        height: 220vh;
+    }
+    
     .scroll-video-wrapper {
         padding: 90px var(--spacing-sm) var(--spacing-sm);
     }
@@ -841,6 +845,10 @@ section:nth-child(even) {
 }
 
 @media (max-width: 768px) {
+    .scroll-video-section {
+        height: 200vh;
+    }
+    
     .scroll-video-wrapper {
         padding: 80px var(--spacing-sm) var(--spacing-sm);
     }
@@ -853,7 +861,7 @@ section:nth-child(even) {
 
 @media (max-width: 480px) {
     .scroll-video-section {
-        height: 300vh;
+        height: 180vh;
     }
     
     .scroll-video-wrapper {
