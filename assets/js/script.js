@@ -247,19 +247,6 @@ function updateOnScroll() {
 			} catch (_) {}
 		}
 
-		// Pause hero video while pinned section is active to free decoder
-		if (heroVideo) {
-			if (withinPin) {
-				if (!heroVideo.paused) {
-					try { heroVideo.pause(); } catch (_) {}
-				}
-			} else {
-				if (heroVideo.paused) {
-					heroVideo.play().catch(() => {});
-				}
-			}
-		}
-
         if (scrolled >= start && scrolled <= end) {
             const progress = (scrolled - start) / effectiveDistance;
             const clamped = Math.max(0, Math.min(1, progress));
@@ -419,6 +406,38 @@ if (heroVideo) {
             console.log('Video autoplay prevented:', err);
         });
     });
+}
+
+// Strategic Hero Video Play/Pause based on viewport proximity
+// This saves bandwidth by pausing when out of view, and resumes proactively when approaching
+if (heroVideo) {
+    const heroVideoObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Hero video is visible or approaching viewport - play it
+                    if (heroVideo.paused) {
+                        heroVideo.play().catch(err => {
+                            console.log('Hero video play prevented:', err);
+                        });
+                    }
+                } else {
+                    // Hero video is far from viewport - pause to save bandwidth
+                    if (!heroVideo.paused) {
+                        heroVideo.pause();
+                    }
+                }
+            });
+        },
+        {
+            // Large rootMargin ensures video starts playing before it's visible
+            // 400px means: start playing when hero is 400px away from entering viewport
+            rootMargin: '400px 0px 400px 0px',
+            threshold: 0
+        }
+    );
+    
+    heroVideoObserver.observe(heroVideo);
 }
 
 // Keyboard navigation
