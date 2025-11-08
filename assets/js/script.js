@@ -57,7 +57,9 @@ let rafActive = false;
 let isVideoRegionInView = false;
 let lastSeekTs = 0;
 const MAX_SEEK_FPS_MS = 16; // ~60fps
-const MIN_SEEK_DIFF = 0.02; // seconds; below this, skip seeks to reduce decoder churn
+const MIN_SEEK_DIFF = 0.004; // seconds; tighter threshold for smoother desktop scrubbing
+const METRICS_REFRESH_INTERVAL_MS = 250;
+let lastMetricsRefreshTs = 0;
 
 function getAbsoluteTop(el) {
     let top = 0;
@@ -116,6 +118,9 @@ if (scrollVideo) {
     scrollVideo.addEventListener('loadedmetadata', () => {
         scrollVideo.pause();
         scrollVideo.currentTime = 0;
+        // Recompute track vars now that duration is known to improve mapping accuracy
+        setVideoTrackVars();
+        refreshPinMetrics();
     });
 }
 
@@ -197,13 +202,11 @@ function videoAnimationTick(ts) {
         return;
     }
     // Eased approach to target time
-    const step = diff * 0.18;
+    const step = diff * 0.12; // gentler easing for smoother motion
     currentVideoTime += step;
     try {
-        // Only commit seek if it meaningfully changes time
-        if (Math.abs(step) >= MIN_SEEK_DIFF) {
-            scrollVideo.currentTime = currentVideoTime;
-        }
+        // On non-low-power devices, commit each tick (throttled above) for smoothness
+        scrollVideo.currentTime = currentVideoTime;
         lastSeekTs = ts || performance.now();
     } catch (e) {
         // ignore transient seek errors during buffering
@@ -257,6 +260,12 @@ function updateOnScroll() {
     
     // Scroll-triggered video scrubbing (mapped to the internal pin track)
     if (scrollVideo && pinTrack && !isNaN(scrollVideo.duration)) {
+        // Periodically refresh pin metrics to avoid stale geometry after images/layout settle
+        const nowTs = performance.now();
+        if (!isLowPowerDevice && (nowTs - lastMetricsRefreshTs) > METRICS_REFRESH_INTERVAL_MS) {
+            refreshPinMetrics();
+            lastMetricsRefreshTs = nowTs;
+        }
         if (isLowPowerDevice) {
             // On low-power devices, avoid frequent seeks entirely.
             // Play while pinned, pause and snap to start/end outside.
