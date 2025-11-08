@@ -45,6 +45,8 @@ const enableWheelScrub = false;
 const slowScrollFactor = 0.18; // scale wheel speed while video is pinned
 
 // Cached geometry/vars to avoid layout reads in scroll handler
+// Detect devices that struggle with heavy seeking (coarse pointer or narrow viewport)
+const isLowPowerDevice = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || window.innerWidth <= 768;
 let cachedStickyTop = 80;
 let cachedPinDistance = null; // px, when computed by setVideoTrackVars
 let cachedTrackTop = 0;       // absolute top of pinTrack
@@ -255,6 +257,20 @@ function updateOnScroll() {
     
     // Scroll-triggered video scrubbing (mapped to the internal pin track)
     if (scrollVideo && pinTrack && !isNaN(scrollVideo.duration)) {
+        if (isLowPowerDevice) {
+            // On low-power devices, simply set video once based on scroll position percentage to avoid RAF seeking
+            const trackHeight = cachedTrackHeight;
+            const start = cachedTrackTop - cachedStickyTop;
+            const end = start + cachedPinDistance;
+            const progress = Math.max(0, Math.min(1, (scrolled - start) / (end - start)));
+            const newTime = progress * scrollVideo.duration;
+            if (Math.abs(newTime - scrollVideo.currentTime) > 0.1) {
+                scrollVideo.currentTime = newTime;
+            }
+            lastScrolled = scrolled;
+            ticking = false;
+            return;
+        }
         const trackTop = cachedTrackTop;
         const trackHeight = cachedTrackHeight;
         const viewportH = window.innerHeight;
