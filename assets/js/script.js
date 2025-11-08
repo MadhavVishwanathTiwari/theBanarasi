@@ -258,14 +258,46 @@ function updateOnScroll() {
     // Scroll-triggered video scrubbing (mapped to the internal pin track)
     if (scrollVideo && pinTrack && !isNaN(scrollVideo.duration)) {
         if (isLowPowerDevice) {
-            // On low-power devices, simply set video once based on scroll position percentage to avoid RAF seeking
+            // On low-power devices, avoid frequent seeks entirely.
+            // Play while pinned, pause and snap to start/end outside.
+            const trackTop = cachedTrackTop;
             const trackHeight = cachedTrackHeight;
-            const start = cachedTrackTop - cachedStickyTop;
-            const end = start + cachedPinDistance;
-            const progress = Math.max(0, Math.min(1, (scrolled - start) / (end - start)));
-            const newTime = progress * scrollVideo.duration;
-            if (Math.abs(newTime - scrollVideo.currentTime) > 0.1) {
-                scrollVideo.currentTime = newTime;
+            const viewportH = window.innerHeight;
+            const stickyTopOffset = cachedStickyTop;
+            const pinDistance = (cachedPinDistance !== null && !isNaN(cachedPinDistance))
+                ? cachedPinDistance
+                : Math.max(1, trackHeight - (viewportH - stickyTopOffset));
+            const start = trackTop - stickyTopOffset;
+            const end = start + pinDistance;
+
+            if (scrolled < start) {
+                if (!scrollVideo.paused) {
+                    try { scrollVideo.pause(); } catch (_) {}
+                }
+                // Snap to start only if significantly off
+                if (Math.abs(scrollVideo.currentTime - 0) > 0.2) {
+                    try { scrollVideo.currentTime = 0; } catch (_) {}
+                }
+                lastScrolled = scrolled;
+                ticking = false;
+                return;
+            }
+            if (scrolled > end) {
+                if (!scrollVideo.paused) {
+                    try { scrollVideo.pause(); } catch (_) {}
+                }
+                const dur = scrollVideo.duration || 0;
+                if (Math.abs((scrollVideo.currentTime || 0) - dur) > 0.2) {
+                    try { scrollVideo.currentTime = dur; } catch (_) {}
+                }
+                lastScrolled = scrolled;
+                ticking = false;
+                return;
+            }
+            // Within pinned range: ensure it plays
+            if (scrollVideo.paused) {
+                scrollVideo.muted = true;
+                try { scrollVideo.play().catch(() => {}); } catch (_) {}
             }
             lastScrolled = scrolled;
             ticking = false;
