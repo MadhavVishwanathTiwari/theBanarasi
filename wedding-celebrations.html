@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Wedding Celebrations at Banarasi Banquet - Create your dream wedding with our luxurious banquet hall, authentic catering, and complete event planning services">
+    <title>Wedding Celebrations - Banarasi Banquet & Restaurant</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Wedding Page Specific Styles */
+        .wedding-hero {
+            position: relative;
+            height: 70vh;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--color-dark-brown) 0%, var(--color-reddish-brown) 100%);
+        }
+
+        .wedding-hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4;
+        }
+
+        .wedding-hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(92, 64, 51, 0.7), rgba(160, 82, 45, 0.8));
+        }
+
+        .wedding-hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--color-off-white);
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .wedding-hero-title {
+            font-family: var(--font-serif);
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--color-off-white);
+            line-height: 1.1;
+        }
+
+        .wedding-hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .wedding-intro {
+            padding: 5rem 0;
+            background: var(--color-off-white);
+        }
+
+        .wedding-intro-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .wedding-intro-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-dark-brown);
+        }
+
+        .wedding-intro-text {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--color-gray-dark);
+            margin-bottom: 1rem;
+        }
+
+        .wedding-features {
+            padding: 5rem 0;
+            background: var(--color-cream);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 1200px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .feature-card {
+            background: var(--color-white);
+            padding: 2.5rem 2rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-cream);
+            border-radius: 50%;
+            color: var(--color-reddish-brown);
+            font-size: 2rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--color-dark-brown);
+        }
+
+        .feature-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--color-gray-dark);
+        }
+
+        .wedding-packages {
+            padding: 5rem 0;
+            background: var(--color-off-white);
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .package-card {
+            background: var(--color-white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .package-header {
+            background: linear-gradient(135deg, var(--color-dark-brown), var(--color-reddish-brown));
+            color: var(--color-off-white);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .package-name {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-off-white);
+        }
+
+        .package-tagline {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .package-body {
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .package-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex: 1;
+        }
+
+        .package-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--color-gray-medium);
+            display: flex;
+            align-items: flex-start;
+            font-size: 0.95rem;
+        }
+
+        .package-features li:last-child {
+            border-bottom: none;
+        }
+
+        .package-features li::before {
+            content: "✓";
+            color: var(--color-dark-green);
+            font-weight: bold;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .wedding-gallery {
+            padding: 5rem 0;
+            background: var(--color-cream);
+        }
+
+        .wedding-gallery-banner {
+            width: 100%;
+            max-width: 1400px;
+            margin: 3rem auto 0;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .wedding-gallery-carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .gallery-slide {
+            display: none;
+            width: 100%;
+            height: 600px;
+            animation: fadeInSlide 1.5s ease-in-out;
+        }
+
+        .gallery-slide.active {
+            display: block;
+        }
+
+        .gallery-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: scale(1.05);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-slide {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-slide {
+                height: 300px;
+            }
+        }
+
+        .wedding-cta {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--color-dark-brown), var(--color-reddish-brown));
+            text-align: center;
+            color: var(--color-off-white);
+        }
+
+        .wedding-cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--color-off-white);
+        }
+
+        .wedding-cta-text {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-light {
+            background: var(--color-off-white);
+            color: var(--color-dark-brown);
+            padding: 1rem 2.5rem;
+            font-size: 1.125rem;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all var(--transition-normal);
+            display: inline-block;
+        }
+
+        .btn-light:hover {
+            background: var(--color-cream);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-outline-light {
+            background: transparent;
+            color: var(--color-off-white);
+            padding: 1rem 2.5rem;
+            font-size: 1.125rem;
+            border-radius: 4px;
+            border: 2px solid var(--color-off-white);
+            font-weight: 500;
+            transition: all var(--transition-normal);
+            display: inline-block;
+        }
+
+        .btn-outline-light:hover {
+            background: var(--color-off-white);
+            color: var(--color-dark-brown);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .wedding-hero-title {
+                font-size: 2.5rem;
+            }
+
+            .wedding-hero-subtitle {
+                font-size: 1.125rem;
+            }
+
+            .wedding-intro-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-light,
+            .btn-outline-light {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo-container">
+                    <img src="assets/images/logo.png" alt="Banarasi Banquet & Restaurant Logo" class="logo">
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html#home" class="nav-link">Home</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="index.html#restaurant" class="nav-link">Restaurant</a></li>
+                    <li><a href="index.html#banquet" class="nav-link">Banquet</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                    <li><a href="index.html#contact" class="btn btn-nav">Book Event</a></li>
+                </ul>
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="wedding-hero">
+        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762184817/pexels-vireshstudio-2060239_mjkp2x.jpg" 
+             alt="Wedding Celebration at Banarasi Banquet" 
+             class="wedding-hero-image">
+        <div class="wedding-hero-overlay"></div>
+        <div class="wedding-hero-content">
+            <h1 class="wedding-hero-title">Wedding Celebrations</h1>
+            <p class="wedding-hero-subtitle">Where Dreams Come to Life - Create Your Perfect Wedding at Banarasi Banquet</p>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="wedding-intro">
+        <div class="container">
+            <div class="wedding-intro-content">
+                <h2 class="wedding-intro-title">Celebrate Your Special Day in Grand Style</h2>
+                <p class="wedding-intro-text">
+                    At Banarasi Banquet, we understand that your wedding day is one of the most important moments of your life. Our sprawling banquet hall, located in the heart of Gandhidham, provides the perfect backdrop for your dream wedding celebration.
+                </p>
+                <p class="wedding-intro-text">
+                    With majestic heights, elegant interiors, and the capacity to host up to 1200 guests, we offer everything you need to create unforgettable memories. From traditional ceremonies to grand receptions, our dedicated team ensures every detail is perfect.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="wedding-features">
+        <div class="container">
+            <h2 class="section-title">Why Choose Banarasi for Your Wedding</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏛️</div>
+                    <h3 class="feature-title">Grand Venue</h3>
+                    <p class="feature-description">Sprawling banquet area with majestic heights accommodating up to 1200 guests, perfect for large celebrations</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🍽️</div>
+                    <h3 class="feature-title">Authentic Cuisine</h3>
+                    <p class="feature-description">Multi-cuisine pure vegetarian catering with authentic North Indian, South Indian, Chinese, and Continental delicacies</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">Complete Event Planning</h3>
+                    <p class="feature-description">Professional event planning and decor services tailored to your vision and theme</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">❄️</div>
+                    <h3 class="feature-title">Climate Controlled</h3>
+                    <p class="feature-description">Fully air-conditioned banquet hall ensuring comfort for you and your guests throughout the celebration</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🚗</div>
+                    <h3 class="feature-title">Ample Parking</h3>
+                    <p class="feature-description">Spacious parking facilities with valet services available on request for guest convenience</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🛏️</div>
+                    <h3 class="feature-title">Guest Accommodation</h3>
+                    <p class="feature-description">7 air-conditioned guest rooms with double beds for family and close relatives</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌿</div>
+                    <h3 class="feature-title">Family-Friendly</h3>
+                    <p class="feature-description">Pure vegetarian, alcohol-free, and smoke-free environment perfect for dignified celebrations</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📍</div>
+                    <h3 class="feature-title">Prime Location</h3>
+                    <p class="feature-description">Centrally located in the heart of Gandhidham-Kutch, easily accessible for all guests</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wedding Packages Section -->
+    <section class="wedding-packages">
+        <div class="container">
+            <h2 class="section-title">Wedding Packages</h2>
+            <p class="section-subtitle">Tailor-made packages to suit your celebration</p>
+            
+            <div class="packages-grid">
+                <div class="package-card">
+                    <div class="package-header">
+                        <h3 class="package-name">Classic Wedding</h3>
+                        <p class="package-tagline">Perfect for intimate gatherings</p>
+                    </div>
+                    <div class="package-body">
+                        <ul class="package-features">
+                            <li>Venue for up to 500 guests</li>
+                            <li>Multi-cuisine vegetarian catering</li>
+                            <li>Basic stage decoration</li>
+                            <li>Standard lighting and sound</li>
+                            <li>Complimentary parking</li>
+                            <li>Service staff included</li>
+                            <li>Access to 3 AC guest rooms</li>
+                        </ul>
+                        <a href="index.html#contact" class="btn btn-primary" style="width: 100%; text-align: center; display: block;">Get Quote</a>
+                    </div>
+                </div>
+                
+                <div class="package-card">
+                    <div class="package-header">
+                        <h3 class="package-name">Premium Wedding</h3>
+                        <p class="package-tagline">Most popular choice</p>
+                    </div>
+                    <div class="package-body">
+                        <ul class="package-features">
+                            <li>Venue for up to 800 guests</li>
+                            <li>Premium multi-cuisine catering with live counters</li>
+                            <li>Complete stage and venue decoration</li>
+                            <li>Professional lighting and sound system</li>
+                            <li>Valet parking services</li>
+                            <li>Dedicated event manager</li>
+                            <li>Access to 5 AC guest rooms</li>
+                            <li>Photography area setup</li>
+                        </ul>
+                        <a href="index.html#contact" class="btn btn-primary" style="width: 100%; text-align: center; display: block;">Get Quote</a>
+                    </div>
+                </div>
+                
+                <div class="package-card">
+                    <div class="package-header">
+                        <h3 class="package-name">Royal Wedding</h3>
+                        <p class="package-tagline">Ultimate grand celebration</p>
+                    </div>
+                    <div class="package-body">
+                        <ul class="package-features">
+                            <li>Full venue for up to 1200 guests</li>
+                            <li>Luxury multi-cuisine catering with special menus</li>
+                            <li>Premium custom decoration and theme setup</li>
+                            <li>State-of-the-art lighting, sound, and DJ</li>
+                            <li>Valet and guest assistance services</li>
+                            <li>Personal event planning and coordination team</li>
+                            <li>All 7 AC guest rooms with amenities</li>
+                            <li>Separate areas for ceremonies and reception</li>
+                            <li>Red carpet and special entrance decor</li>
+                        </ul>
+                        <a href="index.html#contact" class="btn btn-primary" style="width: 100%; text-align: center; display: block;">Get Quote</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="wedding-gallery">
+        <div class="container">
+            <h2 class="section-title">Wedding Gallery</h2>
+            <p class="section-subtitle">Glimpses of beautiful celebrations at Banarasi</p>
+            
+            <div class="wedding-gallery-banner">
+                <div class="wedding-gallery-carousel">
+                    <div class="gallery-slide active">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762184817/pexels-vireshstudio-2060239_mjkp2x.jpg" 
+                             alt="Wedding Celebration 1">
+                    </div>
+                    <div class="gallery-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082789/aboutUsPicture_bsabvd.jpg" 
+                             alt="Wedding Celebration 2">
+                    </div>
+                    <div class="gallery-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083857/banquet-2_nqewdo.jpg" 
+                             alt="Wedding Celebration 3">
+                    </div>
+                    <div class="gallery-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083521/about-2_g3jfzn.jpg" 
+                             alt="Wedding Celebration 4">
+                    </div>
+                    <div class="gallery-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762183423/about3_jm8d8d.jpg" 
+                             alt="Wedding Celebration 5">
+                    </div>
+                    <div class="gallery-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082869/restaurant_spd38n_ouudih.jpg" 
+                             alt="Wedding Celebration 6">
+                    </div>
+                </div>
+                <div class="carousel-progress">
+                    <div class="progress-bar" id="weddingGalleryProgress"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="wedding-cta">
+        <div class="container">
+            <h2 class="wedding-cta-title">Ready to Plan Your Dream Wedding?</h2>
+            <p class="wedding-cta-text">Contact us today to discuss your requirements and get a personalized quote</p>
+            <div class="cta-buttons">
+                <a href="index.html#contact" class="btn-light">Book a Site Visit</a>
+                <a href="tel:+918511663766" class="btn-outline-light">Call Us Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/images/logo.png" alt="Banarasi Banquet & Restaurant Logo" class="footer-logo-img">
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#restaurant">Restaurant</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="index.html#restaurant">Restaurant Dining</a></li>
+                        <li><a href="index.html#banquet">Banquet Hall</a></li>
+                        <li><a href="index.html#contact">Catering</a></li>
+                        <li><a href="index.html#contact">Event Planning</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h4>Connect With Us</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+                        <a href="#" aria-label="Instagram"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+                        <a href="#" aria-label="Twitter"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Banarasi Banquet & Restaurant. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Chat Widget -->
+    <div class="whatsapp-widget">
+        <!-- Chat Box -->
+        <div class="whatsapp-chat-box" id="whatsappChatBox">
+            <div class="whatsapp-header">
+                <div class="whatsapp-header-content">
+                    <div class="whatsapp-avatar">
+                        <svg viewBox="0 0 32 32" fill="currentColor">
+                            <path d="M16 0C7.164 0 0 7.164 0 16c0 2.825.745 5.478 2.038 7.782L.07 31.11l7.511-1.953A15.906 15.906 0 0016 32c8.836 0 16-7.164 16-16S24.836 0 16 0zm0 29.333c-2.547 0-4.964-.725-7.013-1.973l-.502-.291-5.203 1.353 1.393-5.044-.32-.52A13.244 13.244 0 012.667 16c0-7.364 5.969-13.333 13.333-13.333S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.278-9.278c-.4-.2-2.356-1.164-2.72-1.298-.365-.133-.631-.2-.898.2-.267.4-1.031 1.298-1.265 1.564-.233.267-.465.298-.865.098-.4-.2-1.687-.622-3.213-1.982-1.187-1.058-1.989-2.365-2.222-2.765-.233-.4-.025-.617.175-.815.18-.178.4-.465.6-.698.2-.233.267-.4.4-.665.133-.267.067-.498-.033-.698-.1-.2-.898-2.164-1.231-2.965-.324-.78-.653-.675-.898-.687-.233-.011-.498-.013-.765-.013s-.698.098-1.064.498c-.365.4-1.396 1.364-1.396 3.327s1.429 3.862 1.629 4.129c.2.267 2.809 4.291 6.807 6.018.951.411 1.693.655 2.271.84.955.302 1.824.26 2.511.158.765-.115 2.356-.964 2.689-1.895.333-.931.333-1.729.233-1.895-.1-.167-.365-.267-.765-.465z"/>
+                        </svg>
+                    </div>
+                    <div class="whatsapp-info">
+                        <h4>Banarasi Banquet</h4>
+                        <p>Typically replies instantly</p>
+                    </div>
+                </div>
+                <button class="whatsapp-close" id="whatsappClose" aria-label="Close chat">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="whatsapp-body">
+                <div class="whatsapp-message">
+                    <p>Hello! 👋</p>
+                    <p>How can we help you today?</p>
+                </div>
+            </div>
+            <div class="whatsapp-footer">
+                <input type="text" 
+                       id="whatsappInput" 
+                       placeholder="Type your message..." 
+                       class="whatsapp-input">
+                <button class="whatsapp-send" id="whatsappSend" aria-label="Send message">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Float Button -->
+        <button class="whatsapp-float" id="whatsappButton" aria-label="Open WhatsApp chat">
+            <svg viewBox="0 0 32 32" fill="currentColor">
+                <path d="M16 0C7.164 0 0 7.164 0 16c0 2.825.745 5.478 2.038 7.782L.07 31.11l7.511-1.953A15.906 15.906 0 0016 32c8.836 0 16-7.164 16-16S24.836 0 16 0zm0 29.333c-2.547 0-4.964-.725-7.013-1.973l-.502-.291-5.203 1.353 1.393-5.044-.32-.52A13.244 13.244 0 012.667 16c0-7.364 5.969-13.333 13.333-13.333S29.333 8.636 29.333 16 23.364 29.333 16 29.333zm7.278-9.278c-.4-.2-2.356-1.164-2.72-1.298-.365-.133-.631-.2-.898.2-.267.4-1.031 1.298-1.265 1.564-.233.267-.465.298-.865.098-.4-.2-1.687-.622-3.213-1.982-1.187-1.058-1.989-2.365-2.222-2.765-.233-.4-.025-.617.175-.815.18-.178.4-.465.6-.698.2-.233.267-.4.4-.665.133-.267.067-.498-.033-.698-.1-.2-.898-2.164-1.231-2.965-.324-.78-.653-.675-.898-.687-.233-.011-.498-.013-.765-.013s-.698.098-1.064.498c-.365.4-1.396 1.364-1.396 3.327s1.429 3.862 1.629 4.129c.2.267 2.809 4.291 6.807 6.018.951.411 1.693.655 2.271.84.955.302 1.824.26 2.511.158.765-.115 2.356-.964 2.689-1.895.333-.931.333-1.729.233-1.895-.1-.167-.365-.267-.765-.465z"/>
+            </svg>
+        </button>
+    </div>
+
+    <script src="assets/js/script.js"></script>
+    <script>
+        // Wedding Gallery Carousel
+        (function() {
+            const carousel = document.querySelector('.wedding-gallery-carousel');
+            if (!carousel) return;
+            
+            const slides = carousel.querySelectorAll('.gallery-slide');
+            const progressBar = document.getElementById('weddingGalleryProgress');
+            let currentSlide = 0;
+            const slideDuration = 2500; // 2.5 seconds per slide
+            let slideInterval;
+            let progressInterval;
+            let startTime;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+                currentSlide = index;
+            }
+
+            function nextSlide() {
+                const next = (currentSlide + 1) % slides.length;
+                showSlide(next);
+                resetProgress();
+            }
+
+            function updateProgress() {
+                const elapsed = Date.now() - startTime;
+                const progress = (elapsed / slideDuration) * 100;
+                
+                if (progressBar) {
+                    progressBar.style.width = Math.min(progress, 100) + '%';
+                }
+                
+                if (elapsed >= slideDuration) {
+                    nextSlide();
+                }
+            }
+
+            function resetProgress() {
+                startTime = Date.now();
+                if (progressBar) {
+                    progressBar.style.width = '0%';
+                }
+            }
+
+            function startCarousel() {
+                resetProgress();
+                progressInterval = setInterval(updateProgress, 16); // ~60fps
+            }
+
+            function stopCarousel() {
+                if (progressInterval) {
+                    clearInterval(progressInterval);
+                }
+            }
+
+            // Initialize
+            startCarousel();
+
+            // Pause on click and hold
+            carousel.addEventListener('mousedown', stopCarousel);
+            carousel.addEventListener('mouseup', startCarousel);
+            carousel.addEventListener('mouseleave', startCarousel); // Resume if mouse leaves while holding
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', stopCarousel);
+        })();
+    </script>
+</body>
+</html>
+

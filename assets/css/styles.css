@@ -59,6 +59,14 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-overflow-scrolling: touch;
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+    display: none;
 }
 
 img {
@@ -1663,8 +1671,9 @@ section:nth-child(even) {
     }
     
     .hero {
-        min-height: 500px;
-        height: 70vh;
+        min-height: 470px;
+        height: 65vh;
+        max-height: 550px;
     }
     
     .hero-video {
