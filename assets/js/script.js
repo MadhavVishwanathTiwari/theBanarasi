@@ -43,6 +43,8 @@ let isAnimating = false;
 let virtualProgress = 0; // 0..1 wheel-driven progress
 const enableWheelScrub = false;
 const slowScrollFactor = 0.18; // scale wheel speed while video is pinned
+let isScrubActive = false; // only scrub when near/in the pin section
+let hasUpgradedPreload = false; // upgrade preload to auto when approaching
 
 // Set CSS variables for overlap and track height
 function setVideoTrackVars() {
@@ -131,23 +133,31 @@ if (false && scrollVideoWrapper && scrollVideo && pinTrack) {
 
 // Smooth video scrubbing with continuous animation
 function smoothVideoUpdate() {
-    // Only run if video is ready and has valid duration
-    if (scrollVideo && scrollVideo.readyState >= 2 && !isNaN(scrollVideo.duration)) {
-        // Lerp towards target with stronger easing
-        const diff = targetVideoTime - currentVideoTime;
-        const step = diff * 0.1; // slower easing for smoother/less jumpy motion
-        
-        currentVideoTime += step;
-        
-        try {
-            scrollVideo.currentTime = currentVideoTime;
-        } catch (e) {
-            // Ignore seek errors during loading
-        }
-    }
-    
-    // Always keep animating for smooth mouse wheel
-    requestAnimationFrame(smoothVideoUpdate);
+	// Only run heavy seeking when active and video is ready
+	if (isScrubActive && scrollVideo && scrollVideo.readyState >= 2 && !isNaN(scrollVideo.duration)) {
+		const diff = targetVideoTime - currentVideoTime;
+		const absDiff = Math.abs(diff);
+		// Skip tiny seeks to avoid jank on mobile decoders
+		if (absDiff > 0.03) {
+			// Large jumps: use fastSeek when available
+			if (absDiff > 0.75 && typeof scrollVideo.fastSeek === 'function') {
+				try {
+					scrollVideo.fastSeek(targetVideoTime);
+					currentVideoTime = targetVideoTime;
+				} catch (e) {
+					// fall back to incremental seek below
+					currentVideoTime += diff * 0.1;
+					try { scrollVideo.currentTime = currentVideoTime; } catch (_) {}
+				}
+			} else {
+				// Lerp towards target with easing
+				currentVideoTime += diff * 0.1;
+				try { scrollVideo.currentTime = currentVideoTime; } catch (_) {}
+			}
+		}
+	}
+	// Keep a single lightweight loop
+	requestAnimationFrame(smoothVideoUpdate);
 }
 
 // Start the continuous animation loop
@@ -219,6 +229,36 @@ function updateOnScroll() {
         const effectiveDistance = pinDistance;
         const start = trackTop - stickyTopOffset; // start where pinning begins
         const end = start + effectiveDistance;
+
+		// Decide if we are near/within the pin to gate work and prepare buffering
+		const nearStart = start - viewportH * 1.5;
+		const nearEnd = end + viewportH * 0.5;
+		const withinPin = scrolled >= start && scrolled <= end;
+		isScrubActive = scrolled >= nearStart && scrolled <= nearEnd;
+
+		// Upgrade preload as we approach to reduce initial stutter
+		if (!hasUpgradedPreload && isScrubActive) {
+			try {
+				if (scrollVideo.preload !== 'auto') {
+					scrollVideo.preload = 'auto';
+					scrollVideo.load();
+				}
+				hasUpgradedPreload = true;
+			} catch (_) {}
+		}
+
+		// Pause hero video while pinned section is active to free decoder
+		if (heroVideo) {
+			if (withinPin) {
+				if (!heroVideo.paused) {
+					try { heroVideo.pause(); } catch (_) {}
+				}
+			} else {
+				if (heroVideo.paused) {
+					heroVideo.play().catch(() => {});
+				}
+			}
+		}
 
         if (scrolled >= start && scrolled <= end) {
             const progress = (scrolled - start) / effectiveDistance;
