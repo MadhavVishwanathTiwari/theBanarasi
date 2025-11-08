@@ -44,6 +44,35 @@ let virtualProgress = 0; // 0..1 wheel-driven progress
 const enableWheelScrub = false;
 const slowScrollFactor = 0.18; // scale wheel speed while video is pinned
 
+// Cached geometry/vars to avoid layout reads in scroll handler
+let cachedStickyTop = 80;
+let cachedPinDistance = null; // px, when computed by setVideoTrackVars
+let cachedTrackTop = 0;       // absolute top of pinTrack
+let cachedTrackHeight = 1;    // height of pinTrack
+
+// Animation gating/throttling
+let rafActive = false;
+let isVideoRegionInView = false;
+let lastSeekTs = 0;
+const MAX_SEEK_FPS_MS = 16; // ~60fps
+const MIN_SEEK_DIFF = 0.02; // seconds; below this, skip seeks to reduce decoder churn
+
+function getAbsoluteTop(el) {
+    let top = 0;
+    let node = el;
+    while (node) {
+        top += node.offsetTop || 0;
+        node = node.offsetParent;
+    }
+    return top;
+}
+
+function refreshPinMetrics() {
+    if (!pinTrack) return;
+    cachedTrackTop = getAbsoluteTop(pinTrack);
+    cachedTrackHeight = Math.max(1, pinTrack.offsetHeight);
+}
+
 // Set CSS variables for overlap and track height
 function setVideoTrackVars() {
     const root = document.documentElement;
@@ -56,6 +85,7 @@ function setVideoTrackVars() {
         ? Math.round(viewportH * 0.10) // center 80vh → 10vh top
         : 80;
     root.style.setProperty('--stickyTop', stickyTopOffset + 'px');
+    cachedStickyTop = stickyTopOffset;
     // Estimate desired pin distance: scale with duration and viewport
     let seconds = 8;
     if (scrollVideo && !isNaN(scrollVideo.duration)) seconds = scrollVideo.duration;
@@ -67,6 +97,9 @@ function setVideoTrackVars() {
     const pinTrackH = Math.round(pinDistanceDesired + (viewportH - stickyTopOffset));
     root.style.setProperty('--pinTrackH', pinTrackH + 'px');
     root.style.setProperty('--pinDistance', Math.round(pinDistanceDesired) + 'px');
+    cachedPinDistance = Math.round(pinDistanceDesired);
+    // Also refresh absolute metrics tied to layout
+    refreshPinMetrics();
 }
 
 if (document.readyState === 'loading') {
@@ -75,6 +108,7 @@ if (document.readyState === 'loading') {
     setVideoTrackVars();
 }
 window.addEventListener('resize', setVideoTrackVars);
+window.addEventListener('load', refreshPinMetrics);
 
 if (scrollVideo) {
     scrollVideo.addEventListener('loadedmetadata', () => {
@@ -129,29 +163,57 @@ if (false && scrollVideoWrapper && scrollVideo && pinTrack) {
     }, { passive: false });
 }
 
-// Smooth video scrubbing with continuous animation
-function smoothVideoUpdate() {
-    // Only run if video is ready and has valid duration
-    if (scrollVideo && scrollVideo.readyState >= 2 && !isNaN(scrollVideo.duration)) {
-        // Lerp towards target with stronger easing
-        const diff = targetVideoTime - currentVideoTime;
-        const step = diff * 0.1; // slower easing for smoother/less jumpy motion
-        
-        currentVideoTime += step;
-        
-        try {
-            scrollVideo.currentTime = currentVideoTime;
-        } catch (e) {
-            // Ignore seek errors during loading
-        }
-    }
-    
-    // Always keep animating for smooth mouse wheel
-    requestAnimationFrame(smoothVideoUpdate);
+// IntersectionObserver to gate animation when the pinned region is near view
+if (scrollVideoWrapper) {
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            isVideoRegionInView = entry.isIntersecting;
+            if (isVideoRegionInView) {
+                ensureVideoAnimation();
+            }
+        });
+    }, { root: null, rootMargin: '200px 0px 200px 0px', threshold: 0 });
+    io.observe(scrollVideoWrapper);
 }
 
-// Start the continuous animation loop
-smoothVideoUpdate();
+// Smooth video scrubbing with gated/throttled animation loop
+function videoAnimationTick(ts) {
+    if (!rafActive) return;
+    if (!(scrollVideo && scrollVideo.readyState >= 2 && !isNaN(scrollVideo.duration))) {
+        rafActive = false;
+        return;
+    }
+    const diff = targetVideoTime - currentVideoTime;
+    // If difference is tiny and region not in view, stop to save work
+    if (Math.abs(diff) < MIN_SEEK_DIFF && !isVideoRegionInView) {
+        rafActive = false;
+        return;
+    }
+    // Throttle seeks to decoder-friendly rate
+    if (ts && (ts - lastSeekTs) < MAX_SEEK_FPS_MS) {
+        requestAnimationFrame(videoAnimationTick);
+        return;
+    }
+    // Eased approach to target time
+    const step = diff * 0.18;
+    currentVideoTime += step;
+    try {
+        // Only commit seek if it meaningfully changes time
+        if (Math.abs(step) >= MIN_SEEK_DIFF) {
+            scrollVideo.currentTime = currentVideoTime;
+        }
+        lastSeekTs = ts || performance.now();
+    } catch (e) {
+        // ignore transient seek errors during buffering
+    }
+    requestAnimationFrame(videoAnimationTick);
+}
+
+function ensureVideoAnimation() {
+    if (rafActive) return;
+    rafActive = true;
+    requestAnimationFrame(videoAnimationTick);
+}
 
 function updateOnScroll() {
     const scrolled = window.pageYOffset;
@@ -193,28 +255,13 @@ function updateOnScroll() {
     
     // Scroll-triggered video scrubbing (mapped to the internal pin track)
     if (scrollVideo && pinTrack && !isNaN(scrollVideo.duration)) {
-        // Absolute position helpers
-        const getAbsoluteTop = (el) => {
-            let top = 0;
-            let node = el;
-            while (node) {
-                top += node.offsetTop || 0;
-                node = node.offsetParent;
-            }
-            return top;
-        };
-
-        const trackTop = getAbsoluteTop(pinTrack);
-        const trackHeight = Math.max(1, pinTrack.offsetHeight);
+        const trackTop = cachedTrackTop;
+        const trackHeight = cachedTrackHeight;
         const viewportH = window.innerHeight;
-        const cssSticky = getComputedStyle(document.documentElement).getPropertyValue('--stickyTop').trim();
-        const stickyTopOffset = cssSticky ? parseFloat(cssSticky) : 80; // matches CSS top on sticky
-
-        // pin distance from CSS var if present
-        const cssPin = getComputedStyle(document.documentElement).getPropertyValue('--pinDistance').trim();
-        const pinDistanceVar = cssPin ? parseFloat(cssPin) : null;
-        const pinDistance = pinDistanceVar && !isNaN(pinDistanceVar)
-            ? pinDistanceVar
+        const stickyTopOffset = cachedStickyTop; // matches CSS top on sticky
+        // Use cached pin distance if available, else compute fallback
+        const pinDistance = (cachedPinDistance !== null && !isNaN(cachedPinDistance))
+            ? cachedPinDistance
             : Math.max(1, trackHeight - (viewportH - stickyTopOffset));
         const effectiveDistance = pinDistance;
         const start = trackTop - stickyTopOffset; // start where pinning begins
@@ -223,11 +270,28 @@ function updateOnScroll() {
         if (scrolled >= start && scrolled <= end) {
             const progress = (scrolled - start) / effectiveDistance;
             const clamped = Math.max(0, Math.min(1, progress));
-            targetVideoTime = clamped * scrollVideo.duration;
+            const newTarget = clamped * scrollVideo.duration;
+            if (Math.abs(newTarget - targetVideoTime) > 0.0001) {
+                targetVideoTime = newTarget;
+                if (Math.abs(targetVideoTime - currentVideoTime) > MIN_SEEK_DIFF) {
+                    ensureVideoAnimation();
+                }
+            }
         } else if (scrolled < start) {
-            targetVideoTime = 0;
+            if (targetVideoTime !== 0) {
+                targetVideoTime = 0;
+                if (Math.abs(targetVideoTime - currentVideoTime) > MIN_SEEK_DIFF) {
+                    ensureVideoAnimation();
+                }
+            }
         } else if (scrolled > end) {
-            targetVideoTime = scrollVideo.duration;
+            const dur = scrollVideo.duration;
+            if (targetVideoTime !== dur) {
+                targetVideoTime = dur;
+                if (Math.abs(targetVideoTime - currentVideoTime) > MIN_SEEK_DIFF) {
+                    ensureVideoAnimation();
+                }
+            }
         }
     }
     
