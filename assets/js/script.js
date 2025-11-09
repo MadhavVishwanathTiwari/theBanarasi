@@ -54,8 +54,9 @@ function setVideoTrackVars() {
     root.style.setProperty('--stickyH', stickyH + 'px');
     const viewportH = window.innerHeight;
     // Position sticky a bit lower on phones so the pin feels anchored mid-viewport
+    // Increase top offset on mobile to reduce bottom slack (faster re-engage when scrolling back)
     const stickyTopOffset = (window.innerWidth <= 768)
-        ? Math.round(viewportH * 0.10) // center 80vh → 10vh top
+        ? Math.round(viewportH * 0.22) // 22vh top on mobile
         : 80;
     root.style.setProperty('--stickyTop', stickyTopOffset + 'px');
     // Estimate desired pin distance: scale with duration and viewport
@@ -146,7 +147,9 @@ function smoothVideoUpdate() {
 		const diff = targetVideoTime - currentVideoTime;
 		const absDiff = Math.abs(diff);
 		// Skip tiny seeks to avoid jank on mobile decoders
-		if (absDiff > 0.03) {
+		const isMobile = window.innerWidth <= 768;
+		const minSeekDelta = isMobile ? 0.02 : 0.03;
+		if (absDiff > minSeekDelta) {
 			// Large jumps: use fastSeek when available
 			if (absDiff > 0.75 && typeof scrollVideo.fastSeek === 'function') {
 				try {
@@ -154,12 +157,12 @@ function smoothVideoUpdate() {
 					currentVideoTime = targetVideoTime;
 				} catch (e) {
 					// fall back to incremental seek below
-					currentVideoTime += diff * 0.1;
+					currentVideoTime += diff * (isMobile ? 0.16 : 0.1);
 					try { scrollVideo.currentTime = currentVideoTime; } catch (_) {}
 				}
 			} else {
 				// Lerp towards target with easing
-				currentVideoTime += diff * 0.1;
+				currentVideoTime += diff * (isMobile ? 0.16 : 0.1);
 				try { scrollVideo.currentTime = currentVideoTime; } catch (_) {}
 			}
 		}
@@ -269,6 +272,13 @@ function updateOnScroll() {
             
             const clamped = Math.max(0, Math.min(1, progress));
             targetVideoTime = clamped * scrollVideo.duration;
+            
+            // Quantize to frame steps on mobile (20fps → 0.05s per frame)
+            if (isMobile) {
+                const frameStep = 1 / 20;
+                const quantized = Math.round(targetVideoTime / frameStep) * frameStep;
+                targetVideoTime = Math.max(0, Math.min(scrollVideo.duration, quantized));
+            }
         } else if (scrolled < start) {
             targetVideoTime = 0;
         } else if (scrolled > end) {
