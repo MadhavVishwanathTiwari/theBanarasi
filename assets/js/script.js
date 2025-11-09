@@ -115,10 +115,14 @@ function resizeCanvasToContainer() {
 }
 
 function drawSpriteFrame(frameIndex) {
-    if (!spriteReady || !canvasCtx || !scrollCanvas) return;
+    if (!spriteReady || !canvasCtx || !scrollCanvas) {
+        console.log('drawSpriteFrame blocked:', { spriteReady, canvasCtx: !!canvasCtx, scrollCanvas: !!scrollCanvas });
+        return;
+    }
     const clamped = Math.max(0, Math.min(spriteCfg.total - 1, frameIndex));
     const sheetIndex = Math.floor(clamped / spriteCfg.framesPerSheet);
     const img = spriteImgs[sheetIndex];
+    console.log('drawSpriteFrame:', { frameIndex, clamped, sheetIndex, hasImg: !!img });
     if (!img) { preloadSheet(sheetIndex); return; }
     // Prime neighbors
     preloadSheet(sheetIndex - 1);
@@ -401,6 +405,7 @@ function updateOnScroll() {
             // Sprite rendering on mobile
             if (scrollCanvas && spriteReady && isMobile) {
                 const frame = Math.round(clamped * (spriteCfg.total - 1));
+                console.log('Sprite render path:', { clamped, frame, scrolled, start, end });
                 drawSpriteFrame(frame);
             } else if (!isNaN(scrollVideo.duration)) {
                 // Video scrubbing path (desktop or mobile without sprites)
