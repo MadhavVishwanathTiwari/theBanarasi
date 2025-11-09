@@ -346,7 +346,9 @@ function updateOnScroll() {
     }
     
     // Scroll-triggered video scrubbing (mapped to the internal pin track)
-    if (scrollVideo && pinTrack && !isNaN(scrollVideo.duration)) {
+    // Allow running even without video duration when sprites are being used on mobile
+    const usingSpritesForScrub = (window.innerWidth <= 768) && scrollCanvas && spriteReady;
+    if (scrollVideo && pinTrack && (!isNaN(scrollVideo.duration) || usingSpritesForScrub)) {
         // Use cached values to avoid computed style/layout thrash
         const trackTop = trackTopCache || getAbsoluteTop(pinTrack);
         const trackHeight = Math.max(1, pinTrack.offsetHeight);
@@ -395,26 +397,41 @@ function updateOnScroll() {
             }
             
             const clamped = Math.max(0, Math.min(1, progress));
-            targetVideoTime = clamped * scrollVideo.duration;
             
             // Sprite rendering on mobile
             if (scrollCanvas && spriteReady && isMobile) {
                 const frame = Math.round(clamped * (spriteCfg.total - 1));
                 drawSpriteFrame(frame);
+            } else if (!isNaN(scrollVideo.duration)) {
+                // Video scrubbing path (desktop or mobile without sprites)
+                targetVideoTime = clamped * scrollVideo.duration;
+                
+                // Quantize to frame steps on mobile video path only
+                if (isMobile) {
+                    // Use just-enough smoothness on phones: ~18fps (≈0.0556s per step)
+                    // Tune between 16–18 for performance vs smoothness trade-off
+                    const frameStep = 1 / mobileScrubFps;
+                    const quantized = Math.round(targetVideoTime / frameStep) * frameStep;
+                    targetVideoTime = Math.max(0, Math.min(scrollVideo.duration, quantized));
+                }
             }
-            
-            // Quantize to frame steps on mobile video path only
-            if (isMobile && !(scrollCanvas && spriteReady)) {
-                // Use just-enough smoothness on phones: ~18fps (≈0.0556s per step)
-                // Tune between 16–18 for performance vs smoothness trade-off
-                const frameStep = 1 / mobileScrubFps;
-                const quantized = Math.round(targetVideoTime / frameStep) * frameStep;
-                targetVideoTime = Math.max(0, Math.min(scrollVideo.duration, quantized));
+        } else {
+            // Handle out-of-range positions
+            if (scrollCanvas && spriteReady && isMobile) {
+                // Sprite: show first or last frame
+                if (scrolled < start) {
+                    drawSpriteFrame(0);
+                } else if (scrolled > end) {
+                    drawSpriteFrame(spriteCfg.total - 1);
+                }
+            } else if (!isNaN(scrollVideo.duration)) {
+                // Video: set time to start or end
+                if (scrolled < start) {
+                    targetVideoTime = 0;
+                } else if (scrolled > end) {
+                    targetVideoTime = scrollVideo.duration;
+                }
             }
-        } else if (scrolled < start) {
-            targetVideoTime = 0;
-        } else if (scrolled > end) {
-            targetVideoTime = scrollVideo.duration;
         }
     }
     
