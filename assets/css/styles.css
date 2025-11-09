@@ -868,11 +868,6 @@ section:nth-child(even) {
     will-change: transform;
 }
 
-/* Hide video when sprites are active on mobile */
-.scroll-video.is-sprite-active {
-    display: none;
-}
-
 @media (max-width: 1024px) {
     .scroll-video-container {
         height: clamp(380px, 80vh, 900px);
