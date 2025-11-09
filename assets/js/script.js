@@ -75,7 +75,7 @@ const spriteCfg = {
     cols: 11,
     rows: 6,
     tileW: 540,
-    tileH: 960,
+    tileH: 360,                // ACTUAL tile height from generated sprites (5940x2160 = 540x360 tiles)
     framesPerSheet: 66,
     sheets: [
         'https://res.cloudinary.com/de177bbsm/image/upload/v1762687023/sheet-1_ll2p0w.webp',
@@ -94,9 +94,14 @@ function preloadSheet(i) {
     img.fetchPriority = 'high';
     img.onload = () => {
         spriteImgs[i] = img;
+        console.log(`Sheet ${i} loaded: ${img.naturalWidth} x ${img.naturalHeight}px`);
         if (!spriteReady && spriteImgs[0]) {
             spriteReady = true;
+            console.log('✓ Sprites ready! First sheet loaded.');
             if (scrollVideo) scrollVideo.classList.add('is-sprite-active'); // hide video
+            // Ensure canvas is sized correctly and draw first frame
+            resizeCanvasToContainer();
+            drawSpriteFrame(0);
         }
     };
     img.src = spriteCfg.sheets[i];
@@ -108,9 +113,11 @@ function resizeCanvasToContainer() {
     if (!container) return;
     const w = container.clientWidth || 0;
     const h = container.clientHeight || 0;
+    console.log('resizeCanvas check:', { w, h, canvasW: scrollCanvas.width, canvasH: scrollCanvas.height });
     if (w > 0 && h > 0 && (scrollCanvas.width !== w || scrollCanvas.height !== h)) {
         scrollCanvas.width = w;
         scrollCanvas.height = h;
+        console.log('✓ Canvas resized to:', w, 'x', h);
     }
 }
 
@@ -123,16 +130,38 @@ function drawSpriteFrame(frameIndex) {
     const sheetIndex = Math.floor(clamped / spriteCfg.framesPerSheet);
     const img = spriteImgs[sheetIndex];
     console.log('drawSpriteFrame:', { frameIndex, clamped, sheetIndex, hasImg: !!img });
-    if (!img) { preloadSheet(sheetIndex); return; }
+    if (!img) { 
+        console.log('No image for sheet', sheetIndex, '- preloading');
+        preloadSheet(sheetIndex); 
+        return; 
+    }
     // Prime neighbors
+    console.log('Priming neighbors...');
     preloadSheet(sheetIndex - 1);
     preloadSheet(sheetIndex + 1);
+    console.log('After priming neighbors');
     // Cell within sheet
     const indexInSheet = clamped % spriteCfg.framesPerSheet;
     const cx = indexInSheet % spriteCfg.cols;
     const cy = Math.floor(indexInSheet / spriteCfg.cols);
     const sx = cx * spriteCfg.tileW;
     const sy = cy * spriteCfg.tileH;
+    console.log('About to draw - canvas size:', scrollCanvas.width, scrollCanvas.height);
+    if (scrollCanvas.width === 0 || scrollCanvas.height === 0) {
+        console.error('❌ Canvas has zero dimensions! Calling resize...');
+        resizeCanvasToContainer();
+        return;
+    }
+    // Check if source coordinates exceed image bounds
+    if (sx + spriteCfg.tileW > img.naturalWidth || sy + spriteCfg.tileH > img.naturalHeight) {
+        console.error('❌ Source coords out of bounds!', {
+            sx, sy, tileW: spriteCfg.tileW, tileH: spriteCfg.tileH,
+            imgSize: [img.naturalWidth, img.naturalHeight],
+            exceedsW: sx + spriteCfg.tileW > img.naturalWidth,
+            exceedsH: sy + spriteCfg.tileH > img.naturalHeight
+        });
+        return;
+    }
     // Draw scaled to canvas (cover-like)
     canvasCtx.clearRect(0, 0, scrollCanvas.width, scrollCanvas.height);
     // Fit: cover behavior
@@ -141,7 +170,13 @@ function drawSpriteFrame(frameIndex) {
     const dh = spriteCfg.tileH * scale;
     const dx = (scrollCanvas.width - dw) / 2;
     const dy = (scrollCanvas.height - dh) / 2;
-    canvasCtx.drawImage(img, sx, sy, spriteCfg.tileW, spriteCfg.tileH, dx, dy, dw, dh);
+    console.log('Drawing frame:', { sx, sy, tileW: spriteCfg.tileW, tileH: spriteCfg.tileH, dx, dy, dw, dh, canvasSize: [scrollCanvas.width, scrollCanvas.height] });
+    try {
+        canvasCtx.drawImage(img, sx, sy, spriteCfg.tileW, spriteCfg.tileH, dx, dy, dw, dh);
+        console.log('✓ drawImage succeeded for frame', frameIndex);
+    } catch (err) {
+        console.error('❌ drawImage failed:', err);
+    }
 }
 
 // Set CSS variables for overlap and track height
@@ -388,12 +423,14 @@ function updateOnScroll() {
 			} catch (_) {}
 		}
 
+        // Check if mobile - needed across all branches
+        const isMobile = window.innerWidth <= 768;
+
         if (scrolled >= start && scrolled <= end) {
             let progress = (scrolled - start) / effectiveDistance;
             
             // Apply faster scrubbing speed on phones to compensate for 20fps video
             // This makes the video advance faster per scroll distance, reducing visible frame gaps
-            const isMobile = window.innerWidth <= 768;
             if (isMobile && !(scrollCanvas && spriteReady)) {
                 // 1.2x speed means 20% faster scrubbing on phones
                 // Adjust this multiplier (1.2 - 1.6) to fine-tune the feel
