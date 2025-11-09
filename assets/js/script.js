@@ -63,8 +63,16 @@ function setVideoTrackVars() {
     if (scrollVideo && !isNaN(scrollVideo.duration)) seconds = scrollVideo.duration;
     const pxPerSec = 350; // tune for feel
     const baseDistance = seconds * pxPerSec;
-    const minDistance = viewportH * (window.innerWidth <= 768 ? 3.5 : 4.5);
-    const pinDistanceDesired = Math.max(baseDistance, minDistance);
+    const isMobile = window.innerWidth <= 768;
+    const minDistance = viewportH * (isMobile ? 3.5 : 4.5);
+    let pinDistanceDesired = Math.max(baseDistance, minDistance);
+    
+    // Reduce scroll distance on mobile to match faster scrubbing speed (1.4x)
+    // This keeps video scrubbing in sync with scroll completion
+    if (isMobile) {
+        pinDistanceDesired = pinDistanceDesired / 1.4; // 71% of original distance
+    }
+    
     // For internal pin track, height = pinDistance + slack while sticky is visible
     const pinTrackH = Math.round(pinDistanceDesired + (viewportH - stickyTopOffset));
     root.style.setProperty('--pinTrackH', pinTrackH + 'px');
@@ -248,7 +256,17 @@ function updateOnScroll() {
 		}
 
         if (scrolled >= start && scrolled <= end) {
-            const progress = (scrolled - start) / effectiveDistance;
+            let progress = (scrolled - start) / effectiveDistance;
+            
+            // Apply faster scrubbing speed on phones to compensate for 20fps video
+            // This makes the video advance faster per scroll distance, reducing visible frame gaps
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                // 1.4x speed means 40% faster scrubbing on phones
+                // Adjust this multiplier (1.2 - 1.6) to fine-tune the feel
+                progress = progress * 1.4;
+            }
+            
             const clamped = Math.max(0, Math.min(1, progress));
             targetVideoTime = clamped * scrollVideo.duration;
         } else if (scrolled < start) {
