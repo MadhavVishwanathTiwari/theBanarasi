@@ -847,6 +847,7 @@ section:nth-child(even) {
     width: 100%;
     height: clamp(380px, 80vh, 900px);
     overflow: hidden;
+    contain: paint;
     border-radius: 8px;
     box-shadow: 0 10px 40px rgba(92, 64, 51, 0.15);
 }

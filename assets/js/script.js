@@ -45,6 +45,24 @@ const enableWheelScrub = false;
 const slowScrollFactor = 0.18; // scale wheel speed while video is pinned
 let isScrubActive = false; // only scrub when near/in the pin section
 let hasUpgradedPreload = false; // upgrade preload to auto when approaching
+// Animation loop gating
+let rafId = 0;
+function startSmoothLoop() {
+    if (!rafId) rafId = requestAnimationFrame(smoothVideoUpdate);
+}
+function stopSmoothLoop() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+}
+// Cached layout values to avoid repeated style reads during scroll
+let stickyTopCache = 80;
+let pinDistanceCache = 1600;
+let trackTopCache = 0;
+let viewportHCache = window.innerHeight;
+function getAbsoluteTop(el) {
+    let t = 0, n = el;
+    while (n) { t += n.offsetTop || 0; n = n.offsetParent; }
+    return t;
+}
 
 // Set CSS variables for overlap and track height
 function setVideoTrackVars() {
@@ -82,6 +100,11 @@ function setVideoTrackVars() {
     const pinTrackH = Math.round(pinDistanceDesired + (viewportH - stickyTopOffset));
     root.style.setProperty('--pinTrackH', pinTrackH + 'px');
     root.style.setProperty('--pinDistance', Math.round(pinDistanceDesired) + 'px');
+    // Update caches
+    stickyTopCache = stickyTopOffset;
+    pinDistanceCache = Math.round(pinDistanceDesired);
+    viewportHCache = viewportH;
+    trackTopCache = pinTrack ? getAbsoluteTop(pinTrack) : 0;
 }
 
 if (document.readyState === 'loading') {
@@ -90,10 +113,19 @@ if (document.readyState === 'loading') {
     setVideoTrackVars();
 }
 window.addEventListener('resize', setVideoTrackVars);
+window.addEventListener('orientationchange', setVideoTrackVars);
 // Also listen to visual viewport changes on mobile (address bar show/hide)
 if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', setVideoTrackVars);
     window.visualViewport.addEventListener('scroll', setVideoTrackVars);
+}
+// Observe size changes of the pin elements to refresh caches without polling
+if ('ResizeObserver' in window) {
+    const ro = new ResizeObserver(() => setVideoTrackVars());
+    const pin = document.querySelector('.pin-track');
+    const container = document.querySelector('.scroll-video-container');
+    if (pin) ro.observe(pin);
+    if (container) ro.observe(container);
 }
 
 if (scrollVideo) {
@@ -176,12 +208,18 @@ function smoothVideoUpdate() {
 			}
 		}
 	}
-	// Keep a single lightweight loop
-	requestAnimationFrame(smoothVideoUpdate);
+	// Keep a single lightweight loop only while requested
+	if (rafId) rafId = requestAnimationFrame(smoothVideoUpdate);
 }
 
-// Start the continuous animation loop
-smoothVideoUpdate();
+// Start/stop loop based on page visibility
+document.addEventListener('visibilitychange', () => {
+	if (document.hidden) {
+		stopSmoothLoop();
+	} else if (isScrubActive) {
+		startSmoothLoop();
+	}
+});
 
 function updateOnScroll() {
     const scrolled = window.pageYOffset;
@@ -223,38 +261,24 @@ function updateOnScroll() {
     
     // Scroll-triggered video scrubbing (mapped to the internal pin track)
     if (scrollVideo && pinTrack && !isNaN(scrollVideo.duration)) {
-        // Absolute position helpers
-        const getAbsoluteTop = (el) => {
-            let top = 0;
-            let node = el;
-            while (node) {
-                top += node.offsetTop || 0;
-                node = node.offsetParent;
-            }
-            return top;
-        };
-
-        const trackTop = getAbsoluteTop(pinTrack);
+        // Use cached values to avoid computed style/layout thrash
+        const trackTop = trackTopCache || getAbsoluteTop(pinTrack);
         const trackHeight = Math.max(1, pinTrack.offsetHeight);
-        const viewportH = window.innerHeight;
-        const cssSticky = getComputedStyle(document.documentElement).getPropertyValue('--stickyTop').trim();
-        const stickyTopOffset = cssSticky ? parseFloat(cssSticky) : 80; // matches CSS top on sticky
-
-        // pin distance from CSS var if present
-        const cssPin = getComputedStyle(document.documentElement).getPropertyValue('--pinDistance').trim();
-        const pinDistanceVar = cssPin ? parseFloat(cssPin) : null;
-        const pinDistance = pinDistanceVar && !isNaN(pinDistanceVar)
-            ? pinDistanceVar
-            : Math.max(1, trackHeight - (viewportH - stickyTopOffset));
+        const viewportH = viewportHCache;
+        const stickyTopOffset = stickyTopCache;
+        const pinDistance = pinDistanceCache || Math.max(1, trackHeight - (viewportH - stickyTopOffset));
         const effectiveDistance = pinDistance;
         const start = trackTop - stickyTopOffset; // start where pinning begins
         const end = start + effectiveDistance;
 
 		// Decide if we are near/within the pin to gate work and prepare buffering
-		const nearStart = start - viewportH * 1.5;
-		const nearEnd = end + viewportH * 0.5;
+		// Widen nearStart slightly so the loop activates immediately when scrolling back up
+		const nearStart = start - viewportH * 1.8;
+		const nearEnd = end + viewportH * 0.6;
 		const withinPin = scrolled >= start && scrolled <= end;
 		isScrubActive = scrolled >= nearStart && scrolled <= nearEnd;
+		// Start/stop the animation loop on proximity to remove activation lag
+		if (isScrubActive) startSmoothLoop(); else stopSmoothLoop();
 
 		// Upgrade preload as we approach to reduce initial stutter
 		if (!hasUpgradedPreload && isScrubActive) {
