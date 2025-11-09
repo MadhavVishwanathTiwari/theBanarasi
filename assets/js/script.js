@@ -52,11 +52,15 @@ function setVideoTrackVars() {
     const container = document.querySelector('.scroll-video-container');
     const stickyH = container ? container.offsetHeight : 0;
     root.style.setProperty('--stickyH', stickyH + 'px');
-    const viewportH = window.innerHeight;
-    // Center the pinned video vertically on mobile by computing (viewport - container)/2
+    // Use visual viewport height when available (accounts for mobile browser UI)
+    const viewportH = window.visualViewport ? Math.round(window.visualViewport.height) : window.innerHeight;
+    // Reserve space for the fixed navbar so the sticky element never clips into it
+    const headerEl = document.querySelector('.navbar');
+    const headerH = headerEl ? headerEl.offsetHeight : 0;
+    // Center the pinned video vertically within the visible area below the header on mobile
     const isMobileViewport = window.innerWidth <= 768;
     const stickyTopOffset = isMobileViewport
-        ? Math.max(0, Math.round((viewportH - stickyH) / 2))
+        ? (headerH + Math.max(0, Math.round(((viewportH - headerH) - stickyH) / 2)))
         : 80;
     root.style.setProperty('--stickyTop', stickyTopOffset + 'px');
     // Estimate desired pin distance: scale with duration and viewport
@@ -86,6 +90,11 @@ if (document.readyState === 'loading') {
     setVideoTrackVars();
 }
 window.addEventListener('resize', setVideoTrackVars);
+// Also listen to visual viewport changes on mobile (address bar show/hide)
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', setVideoTrackVars);
+    window.visualViewport.addEventListener('scroll', setVideoTrackVars);
+}
 
 if (scrollVideo) {
     scrollVideo.addEventListener('loadedmetadata', () => {
