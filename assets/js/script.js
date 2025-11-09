@@ -53,10 +53,10 @@ function setVideoTrackVars() {
     const stickyH = container ? container.offsetHeight : 0;
     root.style.setProperty('--stickyH', stickyH + 'px');
     const viewportH = window.innerHeight;
-    // Position sticky a bit lower on phones so the pin feels anchored mid-viewport
-    // Increase top offset on mobile to reduce bottom slack (faster re-engage when scrolling back)
-    const stickyTopOffset = (window.innerWidth <= 768)
-        ? Math.round(viewportH * 0.22) // 22vh top on mobile
+    // Center the pinned video vertically on mobile by computing (viewport - container)/2
+    const isMobileViewport = window.innerWidth <= 768;
+    const stickyTopOffset = isMobileViewport
+        ? Math.max(0, Math.round((viewportH - stickyH) / 2))
         : 80;
     root.style.setProperty('--stickyTop', stickyTopOffset + 'px');
     // Estimate desired pin distance: scale with duration and viewport
@@ -275,7 +275,10 @@ function updateOnScroll() {
             
             // Quantize to frame steps on mobile (20fps → 0.05s per frame)
             if (isMobile) {
-                const frameStep = 1 / 20;
+                // Use just-enough smoothness on phones: ~18fps (≈0.0556s per step)
+                // Tune between 16–18 for performance vs smoothness trade-off
+                const mobileScrubFps = 18;
+                const frameStep = 1 / mobileScrubFps;
                 const quantized = Math.round(targetVideoTime / frameStep) * frameStep;
                 targetVideoTime = Math.max(0, Math.min(scrollVideo.duration, quantized));
             }
