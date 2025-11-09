@@ -37,8 +37,6 @@ const scrollVideo = document.querySelector('.scroll-video');
 const banquetSection = document.querySelector('#banquet');
 const scrollVideoWrapper = document.querySelector('.scroll-video-wrapper');
 const pinTrack = document.querySelector('.pin-track');
-const scrollCanvas = document.getElementById('scrollCanvas');
-const canvasCtx = scrollCanvas ? scrollCanvas.getContext('2d', { alpha: false, desynchronized: true }) : null;
 let currentVideoTime = 0;
 let targetVideoTime = 0;
 let isAnimating = false;
@@ -66,119 +64,6 @@ function getAbsoluteTop(el) {
     return t;
 }
 
-// ===================================
-// Sprite-sheet configuration (mobile)
-// ===================================
-const mobileScrubFps = 18; // “just enough” smoothness on phones
-const spriteCfg = {
-    total: 198,                // 11s * 18fps
-    cols: 11,
-    rows: 6,
-    tileW: 540,
-    tileH: 360,                // ACTUAL tile height from generated sprites (5940x2160 = 540x360 tiles)
-    framesPerSheet: 66,
-    sheets: [
-        'https://res.cloudinary.com/de177bbsm/image/upload/v1762687023/sheet-1_ll2p0w.webp',
-        'https://res.cloudinary.com/de177bbsm/image/upload/v1762687022/sheet-2_mcskrl.webp',
-        'https://res.cloudinary.com/de177bbsm/image/upload/v1762687023/sheet-3_tnuh4w.webp'
-    ]
-};
-const spriteImgs = new Array(spriteCfg.sheets.length);
-let spriteReady = false;
-
-function preloadSheet(i) {
-    if (i < 0 || i >= spriteCfg.sheets.length) return;
-    if (spriteImgs[i]) return;
-    const img = new Image();
-    img.decoding = 'async';
-    img.fetchPriority = 'high';
-    img.onload = () => {
-        spriteImgs[i] = img;
-        console.log(`Sheet ${i} loaded: ${img.naturalWidth} x ${img.naturalHeight}px`);
-        if (!spriteReady && spriteImgs[0]) {
-            spriteReady = true;
-            console.log('✓ Sprites ready! First sheet loaded.');
-            if (scrollVideo) scrollVideo.classList.add('is-sprite-active'); // hide video
-            // Ensure canvas is sized correctly and draw first frame
-            resizeCanvasToContainer();
-            drawSpriteFrame(0);
-        }
-    };
-    img.src = spriteCfg.sheets[i];
-}
-
-function resizeCanvasToContainer() {
-    if (!scrollCanvas) return;
-    const container = document.querySelector('.scroll-video-container');
-    if (!container) return;
-    const w = container.clientWidth || 0;
-    const h = container.clientHeight || 0;
-    console.log('resizeCanvas check:', { w, h, canvasW: scrollCanvas.width, canvasH: scrollCanvas.height });
-    if (w > 0 && h > 0 && (scrollCanvas.width !== w || scrollCanvas.height !== h)) {
-        scrollCanvas.width = w;
-        scrollCanvas.height = h;
-        console.log('✓ Canvas resized to:', w, 'x', h);
-    }
-}
-
-function drawSpriteFrame(frameIndex) {
-    if (!spriteReady || !canvasCtx || !scrollCanvas) {
-        console.log('drawSpriteFrame blocked:', { spriteReady, canvasCtx: !!canvasCtx, scrollCanvas: !!scrollCanvas });
-        return;
-    }
-    const clamped = Math.max(0, Math.min(spriteCfg.total - 1, frameIndex));
-    const sheetIndex = Math.floor(clamped / spriteCfg.framesPerSheet);
-    const img = spriteImgs[sheetIndex];
-    console.log('drawSpriteFrame:', { frameIndex, clamped, sheetIndex, hasImg: !!img });
-    if (!img) { 
-        console.log('No image for sheet', sheetIndex, '- preloading');
-        preloadSheet(sheetIndex); 
-        return; 
-    }
-    // Prime neighbors
-    console.log('Priming neighbors...');
-    preloadSheet(sheetIndex - 1);
-    preloadSheet(sheetIndex + 1);
-    console.log('After priming neighbors');
-    // Cell within sheet
-    const indexInSheet = clamped % spriteCfg.framesPerSheet;
-    const cx = indexInSheet % spriteCfg.cols;
-    const cy = Math.floor(indexInSheet / spriteCfg.cols);
-    const sx = cx * spriteCfg.tileW;
-    const sy = cy * spriteCfg.tileH;
-    console.log('About to draw - canvas size:', scrollCanvas.width, scrollCanvas.height);
-    if (scrollCanvas.width === 0 || scrollCanvas.height === 0) {
-        console.error('❌ Canvas has zero dimensions! Calling resize...');
-        resizeCanvasToContainer();
-        return;
-    }
-    // Check if source coordinates exceed image bounds
-    if (sx + spriteCfg.tileW > img.naturalWidth || sy + spriteCfg.tileH > img.naturalHeight) {
-        console.error('❌ Source coords out of bounds!', {
-            sx, sy, tileW: spriteCfg.tileW, tileH: spriteCfg.tileH,
-            imgSize: [img.naturalWidth, img.naturalHeight],
-            exceedsW: sx + spriteCfg.tileW > img.naturalWidth,
-            exceedsH: sy + spriteCfg.tileH > img.naturalHeight
-        });
-        return;
-    }
-    // Draw scaled to canvas (cover-like)
-    canvasCtx.clearRect(0, 0, scrollCanvas.width, scrollCanvas.height);
-    // Fit: cover behavior
-    const scale = Math.max(scrollCanvas.width / spriteCfg.tileW, scrollCanvas.height / spriteCfg.tileH);
-    const dw = spriteCfg.tileW * scale;
-    const dh = spriteCfg.tileH * scale;
-    const dx = (scrollCanvas.width - dw) / 2;
-    const dy = (scrollCanvas.height - dh) / 2;
-    console.log('Drawing frame:', { sx, sy, tileW: spriteCfg.tileW, tileH: spriteCfg.tileH, dx, dy, dw, dh, canvasSize: [scrollCanvas.width, scrollCanvas.height] });
-    try {
-        canvasCtx.drawImage(img, sx, sy, spriteCfg.tileW, spriteCfg.tileH, dx, dy, dw, dh);
-        console.log('✓ drawImage succeeded for frame', frameIndex);
-    } catch (err) {
-        console.error('❌ drawImage failed:', err);
-    }
-}
-
 // Set CSS variables for overlap and track height
 function setVideoTrackVars() {
     const root = document.documentElement;
@@ -197,16 +82,11 @@ function setVideoTrackVars() {
         : 80;
     root.style.setProperty('--stickyTop', stickyTopOffset + 'px');
     // Estimate desired pin distance: scale with duration and viewport
-    // On mobile sprites, we use sprite duration (total / fps) instead of video duration
-    const isMobile = window.innerWidth <= 768;
     let seconds = 7;
-    if (isMobile && scrollCanvas) {
-        seconds = spriteCfg.total / mobileScrubFps; // ~11s
-    } else if (scrollVideo && !isNaN(scrollVideo.duration)) {
-        seconds = scrollVideo.duration;
-    }
+    if (scrollVideo && !isNaN(scrollVideo.duration)) seconds = scrollVideo.duration;
     const pxPerSec = 350; // tune for feel
     const baseDistance = seconds * pxPerSec;
+    const isMobile = window.innerWidth <= 768;
     const minDistance = viewportH * (isMobile ? 3.5 : 4.5);
     let pinDistanceDesired = Math.max(baseDistance, minDistance);
     
@@ -225,8 +105,6 @@ function setVideoTrackVars() {
     pinDistanceCache = Math.round(pinDistanceDesired);
     viewportHCache = viewportH;
     trackTopCache = pinTrack ? getAbsoluteTop(pinTrack) : 0;
-    // Ensure canvas matches container
-    resizeCanvasToContainer();
 }
 
 if (document.readyState === 'loading') {
@@ -306,10 +184,7 @@ if (false && scrollVideoWrapper && scrollVideo && pinTrack) {
 // Smooth video scrubbing with continuous animation
 function smoothVideoUpdate() {
 	// Only run heavy seeking when active and video is ready
-	const usingSprites = (window.innerWidth <= 768) && scrollCanvas && spriteReady;
-	if (usingSprites) {
-		// No video seeking work needed while sprites are active
-	} else if (isScrubActive && scrollVideo && scrollVideo.readyState >= 2 && !isNaN(scrollVideo.duration)) {
+	if (isScrubActive && scrollVideo && scrollVideo.readyState >= 2 && !isNaN(scrollVideo.duration)) {
 		const diff = targetVideoTime - currentVideoTime;
 		const absDiff = Math.abs(diff);
 		// Skip tiny seeks to avoid jank on mobile decoders
@@ -385,9 +260,7 @@ function updateOnScroll() {
     }
     
     // Scroll-triggered video scrubbing (mapped to the internal pin track)
-    // Allow running even without video duration when sprites are being used on mobile
-    const usingSpritesForScrub = (window.innerWidth <= 768) && scrollCanvas && spriteReady;
-    if (scrollVideo && pinTrack && (!isNaN(scrollVideo.duration) || usingSpritesForScrub)) {
+    if (scrollVideo && pinTrack && !isNaN(scrollVideo.duration)) {
         // Use cached values to avoid computed style/layout thrash
         const trackTop = trackTopCache || getAbsoluteTop(pinTrack);
         const trackHeight = Math.max(1, pinTrack.offsetHeight);
@@ -404,13 +277,8 @@ function updateOnScroll() {
 		const nearEnd = end + viewportH * 0.6;
 		const withinPin = scrolled >= start && scrolled <= end;
 		isScrubActive = scrolled >= nearStart && scrolled <= nearEnd;
-		// Prefetch sprite sheets as we approach (mobile only)
-		if (isScrubActive && scrollCanvas && !spriteReady) {
-			preloadSheet(0);
-		}
-		// Start/stop the animation loop on proximity; disable when sprites are active
-		const usingSprites = (window.innerWidth <= 768) && scrollCanvas && spriteReady;
-		if (isScrubActive && !usingSprites) startSmoothLoop(); else stopSmoothLoop();
+		// Start/stop the animation loop on proximity to remove activation lag
+		if (isScrubActive) startSmoothLoop(); else stopSmoothLoop();
 
 		// Upgrade preload as we approach to reduce initial stutter
 		if (!hasUpgradedPreload && isScrubActive) {
@@ -423,57 +291,34 @@ function updateOnScroll() {
 			} catch (_) {}
 		}
 
-        // Check if mobile - needed across all branches
-        const isMobile = window.innerWidth <= 768;
-
         if (scrolled >= start && scrolled <= end) {
             let progress = (scrolled - start) / effectiveDistance;
             
             // Apply faster scrubbing speed on phones to compensate for 20fps video
             // This makes the video advance faster per scroll distance, reducing visible frame gaps
-            if (isMobile && !(scrollCanvas && spriteReady)) {
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
                 // 1.2x speed means 20% faster scrubbing on phones
                 // Adjust this multiplier (1.2 - 1.6) to fine-tune the feel
                 progress = progress * 1.2;
             }
             
             const clamped = Math.max(0, Math.min(1, progress));
+            targetVideoTime = clamped * scrollVideo.duration;
             
-            // Sprite rendering on mobile
-            if (scrollCanvas && spriteReady && isMobile) {
-                const frame = Math.round(clamped * (spriteCfg.total - 1));
-                console.log('Sprite render path:', { clamped, frame, scrolled, start, end });
-                drawSpriteFrame(frame);
-            } else if (!isNaN(scrollVideo.duration)) {
-                // Video scrubbing path (desktop or mobile without sprites)
-                targetVideoTime = clamped * scrollVideo.duration;
-                
-                // Quantize to frame steps on mobile video path only
-                if (isMobile) {
-                    // Use just-enough smoothness on phones: ~18fps (≈0.0556s per step)
-                    // Tune between 16–18 for performance vs smoothness trade-off
-                    const frameStep = 1 / mobileScrubFps;
-                    const quantized = Math.round(targetVideoTime / frameStep) * frameStep;
-                    targetVideoTime = Math.max(0, Math.min(scrollVideo.duration, quantized));
-                }
+            // Quantize to frame steps on mobile (20fps → 0.05s per frame)
+            if (isMobile) {
+                // Use just-enough smoothness on phones: ~18fps (≈0.0556s per step)
+                // Tune between 16–18 for performance vs smoothness trade-off
+                const mobileScrubFps = 18;
+                const frameStep = 1 / mobileScrubFps;
+                const quantized = Math.round(targetVideoTime / frameStep) * frameStep;
+                targetVideoTime = Math.max(0, Math.min(scrollVideo.duration, quantized));
             }
-        } else {
-            // Handle out-of-range positions
-            if (scrollCanvas && spriteReady && isMobile) {
-                // Sprite: show first or last frame
-                if (scrolled < start) {
-                    drawSpriteFrame(0);
-                } else if (scrolled > end) {
-                    drawSpriteFrame(spriteCfg.total - 1);
-                }
-            } else if (!isNaN(scrollVideo.duration)) {
-                // Video: set time to start or end
-                if (scrolled < start) {
-                    targetVideoTime = 0;
-                } else if (scrolled > end) {
-                    targetVideoTime = scrollVideo.duration;
-                }
-            }
+        } else if (scrolled < start) {
+            targetVideoTime = 0;
+        } else if (scrolled > end) {
+            targetVideoTime = scrollVideo.duration;
         }
     }
     
