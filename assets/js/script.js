@@ -37,6 +37,8 @@ const scrollVideo = document.querySelector('.scroll-video');
 const banquetSection = document.querySelector('#banquet');
 const scrollVideoWrapper = document.querySelector('.scroll-video-wrapper');
 const pinTrack = document.querySelector('.pin-track');
+const scrollCanvas = document.getElementById('scrollCanvas');
+const canvasCtx = scrollCanvas ? scrollCanvas.getContext('2d', { alpha: false, desynchronized: true }) : null;
 let currentVideoTime = 0;
 let targetVideoTime = 0;
 let isAnimating = false;
@@ -64,6 +66,80 @@ function getAbsoluteTop(el) {
     return t;
 }
 
+// ===================================
+// Sprite-sheet configuration (mobile)
+// ===================================
+const mobileScrubFps = 18; // “just enough” smoothness on phones
+const spriteCfg = {
+    total: 198,                // 11s * 18fps
+    cols: 11,
+    rows: 6,
+    tileW: 540,
+    tileH: 960,
+    framesPerSheet: 66,
+    sheets: [
+        'https://res.cloudinary.com/de177bbsm/image/upload/v1762687023/sheet-1_ll2p0w.webp',
+        'https://res.cloudinary.com/de177bbsm/image/upload/v1762687022/sheet-2_mcskrl.webp',
+        'https://res.cloudinary.com/de177bbsm/image/upload/v1762687023/sheet-3_tnuh4w.webp'
+    ]
+};
+const spriteImgs = new Array(spriteCfg.sheets.length);
+let spriteReady = false;
+
+function preloadSheet(i) {
+    if (i < 0 || i >= spriteCfg.sheets.length) return;
+    if (spriteImgs[i]) return;
+    const img = new Image();
+    img.decoding = 'async';
+    img.fetchPriority = 'high';
+    img.onload = () => {
+        spriteImgs[i] = img;
+        if (!spriteReady && spriteImgs[0]) {
+            spriteReady = true;
+            if (scrollVideo) scrollVideo.classList.add('is-sprite-active'); // hide video
+        }
+    };
+    img.src = spriteCfg.sheets[i];
+}
+
+function resizeCanvasToContainer() {
+    if (!scrollCanvas) return;
+    const container = document.querySelector('.scroll-video-container');
+    if (!container) return;
+    const w = container.clientWidth || 0;
+    const h = container.clientHeight || 0;
+    if (w > 0 && h > 0 && (scrollCanvas.width !== w || scrollCanvas.height !== h)) {
+        scrollCanvas.width = w;
+        scrollCanvas.height = h;
+    }
+}
+
+function drawSpriteFrame(frameIndex) {
+    if (!spriteReady || !canvasCtx || !scrollCanvas) return;
+    const clamped = Math.max(0, Math.min(spriteCfg.total - 1, frameIndex));
+    const sheetIndex = Math.floor(clamped / spriteCfg.framesPerSheet);
+    const img = spriteImgs[sheetIndex];
+    if (!img) { preloadSheet(sheetIndex); return; }
+    // Prime neighbors
+    preloadSheet(sheetIndex - 1);
+    preloadSheet(sheetIndex + 1);
+    // Cell within sheet
+    const indexInSheet = clamped % spriteCfg.framesPerSheet;
+    const cx = indexInSheet % spriteCfg.cols;
+    const cy = Math.floor(indexInSheet / spriteCfg.cols);
+    const sx = cx * spriteCfg.tileW;
+    const sy = cy * spriteCfg.tileH;
+    // Draw scaled to canvas (cover-like)
+    canvasCtx.clearRect(0, 0, scrollCanvas.width, scrollCanvas.height);
+    // Fit: cover behavior
+    const scale = Math.max(scrollCanvas.width / spriteCfg.tileW, scrollCanvas.height / spriteCfg.tileH);
+    const dw = spriteCfg.tileW * scale;
+    const dh = spriteCfg.tileH * scale;
+    const dx = (scrollCanvas.width - dw) / 2;
+    const dy = (scrollCanvas.height - dh) / 2;
+    canvasCtx.drawImage(img, sx, sy, spriteCfg.tileW, spriteCfg.tileH, dx, dy, dw, dh);
+}
+
 // Set CSS variables for overlap and track height
 function setVideoTrackVars() {
     const root = document.documentElement;
@@ -82,11 +158,16 @@ function setVideoTrackVars() {
         : 80;
     root.style.setProperty('--stickyTop', stickyTopOffset + 'px');
     // Estimate desired pin distance: scale with duration and viewport
+    // On mobile sprites, we use sprite duration (total / fps) instead of video duration
+    const isMobile = window.innerWidth <= 768;
     let seconds = 7;
-    if (scrollVideo && !isNaN(scrollVideo.duration)) seconds = scrollVideo.duration;
+    if (isMobile && scrollCanvas) {
+        seconds = spriteCfg.total / mobileScrubFps; // ~11s
+    } else if (scrollVideo && !isNaN(scrollVideo.duration)) {
+        seconds = scrollVideo.duration;
+    }
     const pxPerSec = 350; // tune for feel
     const baseDistance = seconds * pxPerSec;
-    const isMobile = window.innerWidth <= 768;
     const minDistance = viewportH * (isMobile ? 3.5 : 4.5);
     let pinDistanceDesired = Math.max(baseDistance, minDistance);
     
@@ -105,6 +186,8 @@ function setVideoTrackVars() {
     pinDistanceCache = Math.round(pinDistanceDesired);
     viewportHCache = viewportH;
     trackTopCache = pinTrack ? getAbsoluteTop(pinTrack) : 0;
+    // Ensure canvas matches container
+    resizeCanvasToContainer();
 }
 
 if (document.readyState === 'loading') {
@@ -184,7 +267,10 @@ if (false && scrollVideoWrapper && scrollVideo && pinTrack) {
 // Smooth video scrubbing with continuous animation
 function smoothVideoUpdate() {
 	// Only run heavy seeking when active and video is ready
-	if (isScrubActive && scrollVideo && scrollVideo.readyState >= 2 && !isNaN(scrollVideo.duration)) {
+	const usingSprites = (window.innerWidth <= 768) && scrollCanvas && spriteReady;
+	if (usingSprites) {
+		// No video seeking work needed while sprites are active
+	} else if (isScrubActive && scrollVideo && scrollVideo.readyState >= 2 && !isNaN(scrollVideo.duration)) {
 		const diff = targetVideoTime - currentVideoTime;
 		const absDiff = Math.abs(diff);
 		// Skip tiny seeks to avoid jank on mobile decoders
@@ -277,8 +363,13 @@ function updateOnScroll() {
 		const nearEnd = end + viewportH * 0.6;
 		const withinPin = scrolled >= start && scrolled <= end;
 		isScrubActive = scrolled >= nearStart && scrolled <= nearEnd;
-		// Start/stop the animation loop on proximity to remove activation lag
-		if (isScrubActive) startSmoothLoop(); else stopSmoothLoop();
+		// Prefetch sprite sheets as we approach (mobile only)
+		if (isScrubActive && scrollCanvas && !spriteReady) {
+			preloadSheet(0);
+		}
+		// Start/stop the animation loop on proximity; disable when sprites are active
+		const usingSprites = (window.innerWidth <= 768) && scrollCanvas && spriteReady;
+		if (isScrubActive && !usingSprites) startSmoothLoop(); else stopSmoothLoop();
 
 		// Upgrade preload as we approach to reduce initial stutter
 		if (!hasUpgradedPreload && isScrubActive) {
@@ -297,7 +388,7 @@ function updateOnScroll() {
             // Apply faster scrubbing speed on phones to compensate for 20fps video
             // This makes the video advance faster per scroll distance, reducing visible frame gaps
             const isMobile = window.innerWidth <= 768;
-            if (isMobile) {
+            if (isMobile && !(scrollCanvas && spriteReady)) {
                 // 1.2x speed means 20% faster scrubbing on phones
                 // Adjust this multiplier (1.2 - 1.6) to fine-tune the feel
                 progress = progress * 1.2;
@@ -306,11 +397,16 @@ function updateOnScroll() {
             const clamped = Math.max(0, Math.min(1, progress));
             targetVideoTime = clamped * scrollVideo.duration;
             
-            // Quantize to frame steps on mobile (20fps → 0.05s per frame)
-            if (isMobile) {
+            // Sprite rendering on mobile
+            if (scrollCanvas && spriteReady && isMobile) {
+                const frame = Math.round(clamped * (spriteCfg.total - 1));
+                drawSpriteFrame(frame);
+            }
+            
+            // Quantize to frame steps on mobile video path only
+            if (isMobile && !(scrollCanvas && spriteReady)) {
                 // Use just-enough smoothness on phones: ~18fps (≈0.0556s per step)
                 // Tune between 16–18 for performance vs smoothness trade-off
-                const mobileScrubFps = 18;
                 const frameStep = 1 / mobileScrubFps;
                 const quantized = Math.round(targetVideoTime / frameStep) * frameStep;
                 targetVideoTime = Math.max(0, Math.min(scrollVideo.duration, quantized));
