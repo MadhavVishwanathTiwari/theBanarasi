@@ -58,6 +58,8 @@ let stickyTopCache = 80;
 let pinDistanceCache = 1600;
 let trackTopCache = 0;
 let viewportHCache = window.innerHeight;
+// Freeze costly geometry recalcs while the video is actively scrubbing (fixes URL-bar show/hide jitter on real phones)
+let layoutFrozen = false;
 function getAbsoluteTop(el) {
     let t = 0, n = el;
     while (n) { t += n.offsetTop || 0; n = n.offsetParent; }
@@ -66,6 +68,7 @@ function getAbsoluteTop(el) {
 
 // Set CSS variables for overlap and track height
 function setVideoTrackVars() {
+    if (layoutFrozen) return; // skip recalculation during active pin to avoid progress rewind on mobile
     const root = document.documentElement;
     const container = document.querySelector('.scroll-video-container');
     const stickyH = container ? container.offsetHeight : 0;
@@ -322,7 +325,10 @@ function updateOnScroll() {
         }
     }
     
-    lastScrolled = scrolled;
+    // Ignore tiny back-bounces (<3 px) that occur with elastic scroll on mobile
+    if (Math.abs(scrolled - lastScrolled) > 2) {
+        lastScrolled = scrolled;
+    }
     ticking = false;
 }
 
