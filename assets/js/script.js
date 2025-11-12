@@ -45,6 +45,11 @@ const enableWheelScrub = false;
 const slowScrollFactor = 0.18; // scale wheel speed while video is pinned
 let isScrubActive = false; // only scrub when near/in the pin section
 let hasUpgradedPreload = false; // upgrade preload to auto when approaching
+
+// 🚫 DISABLE SCRUBBING ON MOBILE - Following Apple's lead
+// Video scrubbing on mobile causes stutter due to hardware limitations
+const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+const ENABLE_MOBILE_SCRUBBING = false; // Set to true only if you hate yourself
 // Animation loop gating
 let rafId = 0;
 function startSmoothLoop() {
@@ -66,6 +71,11 @@ function getAbsoluteTop(el) {
 
 // Set CSS variables for overlap and track height
 function setVideoTrackVars() {
+    // Skip all this complex setup on mobile
+    if (isMobileDevice && !ENABLE_MOBILE_SCRUBBING) {
+        return;
+    }
+    
     const root = document.documentElement;
     const container = document.querySelector('.scroll-video-container');
     const stickyH = container ? container.offsetHeight : 0;
@@ -105,6 +115,12 @@ function setVideoTrackVars() {
     pinDistanceCache = Math.round(pinDistanceDesired);
     viewportHCache = viewportH;
     trackTopCache = pinTrack ? getAbsoluteTop(pinTrack) : 0;
+}
+
+// Hide the entire pin-track section on mobile to avoid empty space
+if (isMobileDevice && !ENABLE_MOBILE_SCRUBBING && pinTrack) {
+    pinTrack.style.display = 'none';
+    console.log('📱 Scrubbing video disabled on mobile (following Apple\'s approach)');
 }
 
 if (document.readyState === 'loading') {
@@ -183,6 +199,12 @@ if (false && scrollVideoWrapper && scrollVideo && pinTrack) {
 
 // Smooth video scrubbing with continuous animation
 function smoothVideoUpdate() {
+	// Skip entirely on mobile
+	if (isMobileDevice && !ENABLE_MOBILE_SCRUBBING) {
+		stopSmoothLoop();
+		return;
+	}
+	
 	// Only run heavy seeking when active and video is ready
 	if (isScrubActive && scrollVideo && scrollVideo.readyState >= 2 && !isNaN(scrollVideo.duration)) {
 		const diff = targetVideoTime - currentVideoTime;
@@ -260,7 +282,8 @@ function updateOnScroll() {
     }
     
     // Scroll-triggered video scrubbing (mapped to the internal pin track)
-    if (scrollVideo && pinTrack && !isNaN(scrollVideo.duration)) {
+    // 🚫 SKIP ON MOBILE - Let them scroll normally without the stutter
+    if (scrollVideo && pinTrack && !isNaN(scrollVideo.duration) && !(isMobileDevice && !ENABLE_MOBILE_SCRUBBING)) {
         // Use cached values to avoid computed style/layout thrash
         const trackTop = trackTopCache || getAbsoluteTop(pinTrack);
         const trackHeight = Math.max(1, pinTrack.offsetHeight);
@@ -816,4 +839,5 @@ function restaurantDragEnd(e) {
 // Console message
 console.log('%cBanarasi Banquet & Restaurant', 'color: #8B6F47; font-size: 20px; font-weight: bold;');
 console.log('%cGandhidham\'s Preferred Destination for Fine Vegetarian Dining', 'color: #5C4033; font-size: 14px;');
+console.log('%c' + (isMobileDevice ? '📱 Mobile Device Detected - Scrubbing disabled' : '🖥️  Desktop Device - Scrubbing enabled'), 'color: #888; font-size: 12px;');
 
