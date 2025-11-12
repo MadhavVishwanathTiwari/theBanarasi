@@ -117,10 +117,10 @@ function setVideoTrackVars() {
     trackTopCache = pinTrack ? getAbsoluteTop(pinTrack) : 0;
 }
 
-// Hide the entire pin-track section on mobile to avoid empty space
-if (isMobileDevice && !ENABLE_MOBILE_SCRUBBING && pinTrack) {
-    pinTrack.style.display = 'none';
-    console.log('📱 Scrubbing video disabled on mobile (following Apple\'s approach)');
+// The pin-track is already hidden via CSS classes (desktop-only/mobile-only)
+// Just log the status for debugging
+if (isMobileDevice && !ENABLE_MOBILE_SCRUBBING) {
+    console.log('📱 Mobile carousel enabled - Scrubbing video disabled (following Apple\'s approach)');
 }
 
 if (document.readyState === 'loading') {
@@ -834,6 +834,114 @@ function restaurantDragEnd(e) {
     
     // Resume auto-rotation
     restaurantSlideInterval = setInterval(nextRestaurantSlide, 3500);
+}
+
+// ===================================
+// Banquet Mobile Carousel
+// ===================================
+const banquetCarouselSlides = document.querySelectorAll('.banquet-carousel-slide');
+const banquetCarousel = document.querySelector('.banquet-carousel');
+const banquetProgressBar = document.getElementById('banquetCarouselProgress');
+let currentBanquetSlide = 0;
+let banquetSlideInterval;
+let isBanquetDragging = false;
+let hasBanquetMoved = false;
+let startBanquetPos = 0;
+let currentBanquetTranslate = 0;
+
+function showBanquetSlide(index) {
+    banquetCarouselSlides.forEach((slide, i) => {
+        slide.classList.remove('active');
+        if (i === index) {
+            slide.classList.add('active');
+        }
+    });
+    
+    // Update progress bar position
+    if (banquetProgressBar) {
+        const percentage = (index * 100);
+        banquetProgressBar.style.transform = `translateX(${percentage}%)`;
+    }
+}
+
+function nextBanquetSlide() {
+    currentBanquetSlide = (currentBanquetSlide + 1) % banquetCarouselSlides.length;
+    showBanquetSlide(currentBanquetSlide);
+}
+
+// Auto-rotate every 3.5 seconds (only if carousel exists)
+if (banquetCarouselSlides.length > 0) {
+    banquetSlideInterval = setInterval(nextBanquetSlide, 3500);
+}
+
+// Drag/Swipe functionality for banquet carousel
+if (banquetCarousel) {
+    // Mouse events
+    banquetCarousel.addEventListener('mousedown', banquetDragStart);
+    banquetCarousel.addEventListener('mousemove', banquetDrag);
+    banquetCarousel.addEventListener('mouseup', banquetDragEnd);
+    banquetCarousel.addEventListener('mouseleave', banquetDragEnd);
+    
+    // Touch events
+    banquetCarousel.addEventListener('touchstart', banquetDragStart, { passive: true });
+    banquetCarousel.addEventListener('touchmove', banquetDrag, { passive: true });
+    banquetCarousel.addEventListener('touchend', banquetDragEnd);
+    
+    // Prevent context menu
+    banquetCarousel.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+function banquetDragStart(e) {
+    isBanquetDragging = true;
+    hasBanquetMoved = false;
+    startBanquetPos = getPositionX(e);
+    currentBanquetTranslate = 0;
+    clearInterval(banquetSlideInterval);
+}
+
+function banquetDrag(e) {
+    if (!isBanquetDragging) return;
+    
+    const currentPosition = getPositionX(e);
+    currentBanquetTranslate = currentPosition - startBanquetPos;
+    
+    // Mark as moved if dragged more than 5px
+    if (Math.abs(currentBanquetTranslate) > 5) {
+        hasBanquetMoved = true;
+        banquetCarousel.style.cursor = 'grabbing';
+    }
+}
+
+function banquetDragEnd(e) {
+    if (!isBanquetDragging) return;
+    
+    isBanquetDragging = false;
+    banquetCarousel.style.cursor = 'grab';
+    
+    // Only change slide if user actually dragged (not just clicked)
+    if (hasBanquetMoved) {
+        const movedBy = currentBanquetTranslate;
+        
+        // If dragged more than 50px, change slide
+        if (movedBy < -50) {
+            // Dragged left - next slide
+            currentBanquetSlide = (currentBanquetSlide + 1) % banquetCarouselSlides.length;
+            showBanquetSlide(currentBanquetSlide);
+        } else if (movedBy > 50) {
+            // Dragged right - previous slide
+            currentBanquetSlide = (currentBanquetSlide - 1 + banquetCarouselSlides.length) % banquetCarouselSlides.length;
+            showBanquetSlide(currentBanquetSlide);
+        }
+    }
+    
+    // Reset values
+    currentBanquetTranslate = 0;
+    hasBanquetMoved = false;
+    
+    // Resume auto-rotation
+    if (banquetCarouselSlides.length > 0) {
+        banquetSlideInterval = setInterval(nextBanquetSlide, 3500);
+    }
 }
 
 // Console message

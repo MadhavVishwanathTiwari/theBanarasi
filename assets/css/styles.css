@@ -882,6 +882,102 @@ section:nth-child(even) {
     }
 }
 
+/* ===================================
+   Mobile/Desktop Visibility Classes
+   =================================== */
+
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block;
+    }
+    
+    .desktop-only {
+        display: none !important;
+    }
+}
+
+/* ===================================
+   Banquet Mobile Carousel
+   =================================== */
+
+.banquet-mobile-carousel {
+    padding: var(--spacing-xl) 0;
+    background: var(--color-gray-light);
+}
+
+.banquet-carousel-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.banquet-carousel {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(92, 64, 51, 0.15);
+    cursor: grab;
+    user-select: none;
+}
+
+.banquet-carousel:active {
+    cursor: grabbing;
+}
+
+.banquet-carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+    pointer-events: none;
+}
+
+.banquet-carousel-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.banquet-carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .banquet-mobile-carousel {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .banquet-carousel {
+        height: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .banquet-mobile-carousel {
+        padding: var(--spacing-md) 0;
+    }
+    
+    .banquet-carousel {
+        height: 300px;
+    }
+}
+
 .offers-header {
     margin-bottom: var(--spacing-xl);
 }

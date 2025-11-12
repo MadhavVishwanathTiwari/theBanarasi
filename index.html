@@ -278,14 +278,43 @@
             </div>
         </div>
         
-        <!-- Pinned scroll video inside Banquet -->
-        <div class="pin-track">
+        <!-- Pinned scroll video inside Banquet (Desktop Only) -->
+        <div class="pin-track desktop-only">
             <div class="pin-sticky">
                 <div class="scroll-video-container">
                     <video class="scroll-video" preload="auto" muted playsinline fetchpriority="high">
                         <source src="https://res.cloudinary.com/de177bbsm/video/upload/v1762678414/Scrollingvideo9x16KF_x10tnl.mp4" type="video/mp4" media="(max-width: 768px) and (orientation: portrait)">
                         <source src="https://res.cloudinary.com/de177bbsm/video/upload/v1762599578/scrollingVideoKF_yeoqfk.mp4" type="video/mp4">
                     </video>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Carousel (Mobile Only) -->
+        <div class="banquet-mobile-carousel mobile-only">
+            <div class="container">
+                <div class="banquet-carousel-wrapper">
+                    <div class="banquet-carousel">
+                        <div class="banquet-carousel-slide active">
+                            <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082789/aboutUsPicture_bsabvd.jpg" 
+                                 alt="Banarasi Banquet Hall">
+                        </div>
+                        <div class="banquet-carousel-slide">
+                            <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083857/banquet-2_nqewdo.jpg" 
+                                 alt="Banarasi Event Space">
+                        </div>
+                        <div class="banquet-carousel-slide">
+                            <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083521/about-2_g3jfzn.jpg" 
+                                 alt="Banarasi Celebration Setup">
+                        </div>
+                        <div class="banquet-carousel-slide">
+                            <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762183423/about3_jm8d8d.jpg" 
+                                 alt="Banarasi Venue Interior">
+                        </div>
+                    </div>
+                    <div class="carousel-progress">
+                        <div class="progress-bar" id="banquetCarouselProgress"></div>
+                    </div>
                 </div>
             </div>
         </div>
