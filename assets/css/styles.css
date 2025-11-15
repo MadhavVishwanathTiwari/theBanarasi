@@ -1509,6 +1509,9 @@ section:nth-child(even) {
     font-weight: 700;
     margin-bottom: var(--spacing-md);
     color: #D4AF37;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    padding-bottom: 0.5rem;
+    display: inline-block;
 }
 
 .footer-links ul {
