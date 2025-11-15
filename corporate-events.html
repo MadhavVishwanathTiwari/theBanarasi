@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="description" content="Wedding Celebrations at Banarasi Banquet - Create your dream wedding with our luxurious banquet hall, authentic catering, and complete event planning services">
-    <title>Wedding Celebrations - Banarasi Banquet & Restaurant</title>
+    <meta name="description" content="Corporate Events at Banarasi Banquet - Professional meeting spaces, training sessions, and corporate gatherings with state-of-the-art facilities">
+    <title>Corporate Events - Banarasi Banquet & Restaurant</title>
     <link rel="icon" type="image/png" href="assets/images/logo.png">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Wedding Page Specific Styles */
-        .wedding-hero {
+        /* Corporate Events Page Specific Styles */
+        .corporate-hero {
             position: relative;
             height: 70vh;
             min-height: 500px;
@@ -23,7 +23,7 @@
             background: linear-gradient(135deg, var(--color-dark-brown) 0%, var(--color-reddish-brown) 100%);
         }
 
-        .wedding-hero-image {
+        .corporate-hero-image {
             position: absolute;
             top: 0;
             left: 0;
@@ -33,7 +33,7 @@
             opacity: 0.4;
         }
 
-        .wedding-hero-overlay {
+        .corporate-hero-overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -42,7 +42,7 @@
             background: linear-gradient(to bottom, rgba(92, 64, 51, 0.7), rgba(160, 82, 45, 0.8));
         }
 
-        .wedding-hero-content {
+        .corporate-hero-content {
             position: relative;
             z-index: 2;
             text-align: center;
@@ -51,7 +51,7 @@
             padding: 0 2rem;
         }
 
-        .wedding-hero-title {
+        .corporate-hero-title {
             font-family: var(--font-serif);
             font-size: 4rem;
             font-weight: 700;
@@ -60,38 +60,38 @@
             line-height: 1.1;
         }
 
-        .wedding-hero-subtitle {
+        .corporate-hero-subtitle {
             font-size: 1.5rem;
             font-weight: 300;
             margin-bottom: 2rem;
             opacity: 0.95;
         }
 
-        .wedding-intro {
+        .corporate-intro {
             padding: 5rem 0;
             background: var(--color-off-white);
         }
 
-        .wedding-intro-content {
+        .corporate-intro-content {
             max-width: 900px;
             margin: 0 auto;
             text-align: center;
         }
 
-        .wedding-intro-title {
+        .corporate-intro-title {
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
             color: var(--color-dark-brown);
         }
 
-        .wedding-intro-text {
+        .corporate-intro-text {
             font-size: 1.125rem;
             line-height: 1.8;
             color: var(--color-gray-dark);
             margin-bottom: 1rem;
         }
 
-        .wedding-features {
+        .corporate-features {
             padding: 5rem 0;
             background: var(--color-cream);
         }
@@ -154,12 +154,12 @@
             color: var(--color-gray-dark);
         }
 
-        .wedding-gallery {
+        .corporate-gallery {
             padding: 5rem 0;
-            background: var(--color-cream);
+            background: var(--color-off-white);
         }
 
-        .wedding-gallery-banner {
+        .corporate-gallery-banner {
             width: 100%;
             max-width: 1400px;
             margin: 3rem auto 0;
@@ -169,7 +169,7 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .wedding-gallery-carousel {
+        .corporate-gallery-carousel {
             position: relative;
             width: 100%;
             overflow: hidden;
@@ -216,7 +216,7 @@
             }
         }
 
-        .wedding-cta {
+        .corporate-cta {
             padding: 6rem 0;
             background: var(--color-off-white);
             text-align: center;
@@ -224,7 +224,7 @@
             overflow: hidden;
         }
 
-        .wedding-cta::before {
+        .corporate-cta::before {
             content: '';
             position: absolute;
             top: 0;
@@ -240,7 +240,7 @@
             );
         }
 
-        .wedding-cta-title {
+        .corporate-cta-title {
             font-family: var(--font-serif);
             font-size: 2.75rem;
             font-weight: 600;
@@ -249,7 +249,7 @@
             line-height: 1.2;
         }
 
-        .wedding-cta-text {
+        .corporate-cta-text {
             font-size: 1.25rem;
             line-height: 1.6;
             margin-bottom: 3rem;
@@ -305,16 +305,59 @@
             box-shadow: 0 8px 25px rgba(92, 64, 51, 0.2);
         }
 
+        .use-cases {
+            padding: 5rem 0;
+            background: var(--color-cream);
+        }
+
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .use-case-card {
+            background: var(--color-white);
+            padding: 2.5rem 2rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        .use-case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .use-case-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .use-case-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--color-dark-brown);
+        }
+
+        .use-case-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--color-gray-dark);
+        }
+
         @media (max-width: 768px) {
-            .wedding-hero-title {
+            .corporate-hero-title {
                 font-size: 2.5rem;
             }
 
-            .wedding-hero-subtitle {
+            .corporate-hero-subtitle {
                 font-size: 1.125rem;
             }
 
-            .wedding-intro-title {
+            .corporate-intro-title {
                 font-size: 2rem;
             }
 
@@ -322,15 +365,19 @@
                 grid-template-columns: 1fr;
             }
 
-            .wedding-cta {
+            .use-cases-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .corporate-cta {
                 padding: 4rem 0;
             }
 
-            .wedding-cta-title {
+            .corporate-cta-title {
                 font-size: 2rem;
             }
 
-            .wedding-cta-text {
+            .corporate-cta-text {
                 font-size: 1.125rem;
                 padding: 0 1rem;
             }
@@ -375,135 +422,177 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="wedding-hero">
-        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762184817/pexels-vireshstudio-2060239_mjkp2x.jpg" 
-             alt="Wedding Celebration at Banarasi Banquet" 
-             class="wedding-hero-image">
-        <div class="wedding-hero-overlay"></div>
-        <div class="wedding-hero-content">
-            <h1 class="wedding-hero-title">Wedding Celebrations</h1>
-            <p class="wedding-hero-subtitle">Where Dreams Come to Life - Create Your Perfect Wedding at Banarasi Banquet</p>
+    <section class="corporate-hero">
+        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762186029/pexels-mikhail-nilov-9300728_jwlwar.jpg" 
+             alt="Corporate Events at Banarasi Banquet" 
+             class="corporate-hero-image">
+        <div class="corporate-hero-overlay"></div>
+        <div class="corporate-hero-content">
+            <h1 class="corporate-hero-title">Corporate Events</h1>
+            <p class="corporate-hero-subtitle">Professional Spaces for Productive Meetings and Memorable Gatherings</p>
         </div>
     </section>
 
     <!-- Introduction Section -->
-    <section class="wedding-intro">
+    <section class="corporate-intro">
         <div class="container">
-            <div class="wedding-intro-content">
-                <h2 class="wedding-intro-title">Celebrate Your Special Day in Grand Style</h2>
-                <p class="wedding-intro-text">
-                    At Banarasi Banquet, we understand that your wedding day is one of the most important moments of your life. Our sprawling banquet hall, located in the heart of Gandhidham, provides the perfect backdrop for your dream wedding celebration.
+            <div class="corporate-intro-content">
+                <h2 class="corporate-intro-title">Elevate Your Corporate Events</h2>
+                <p class="corporate-intro-text">
+                    At Banarasi Banquet, we understand the importance of creating the perfect environment for your corporate needs. Our dedicated Corporate Hall, located within our premier banquet facility in the heart of Gandhidham, offers a professional and versatile space designed to facilitate productive meetings, engaging training sessions, and memorable corporate gatherings.
                 </p>
-                <p class="wedding-intro-text">
-                    With majestic heights, elegant interiors, and the capacity to host up to 1200 guests, we offer everything you need to create unforgettable memories. From traditional ceremonies to grand receptions, our dedicated team ensures every detail is perfect.
+                <p class="corporate-intro-text">
+                    With state-of-the-art audio-visual equipment, comfortable seating for up to 150 guests, and fully air-conditioned facilities, we provide everything you need to ensure your corporate event is a success. Our commitment to excellence extends to our in-house catering services, offering pure vegetarian multi-cuisine options that keep your team energized and focused.
                 </p>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="wedding-features">
+    <section class="corporate-features">
         <div class="container">
-            <h2 class="section-title">Why Choose Banarasi for Your Wedding</h2>
+            <h2 class="section-title">Why Choose Banarasi for Corporate Events</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🏛️</div>
-                    <h3 class="feature-title">Grand Venue</h3>
-                    <p class="feature-description">Sprawling banquet area with majestic heights accommodating up to 1200 guests, perfect for large celebrations</p>
+                    <div class="feature-icon">🏢</div>
+                    <h3 class="feature-title">Spacious Corporate Hall</h3>
+                    <p class="feature-description">Dedicated corporate space accommodating up to 150 guests with flexible seating arrangements for meetings and events</p>
                 </div>
                 
                 <div class="feature-card">
-                    <div class="feature-icon">🍽️</div>
-                    <h3 class="feature-title">Authentic Cuisine</h3>
-                    <p class="feature-description">Multi-cuisine pure vegetarian catering with authentic North Indian, South Indian, Chinese, and Continental delicacies</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <h3 class="feature-title">Complete Event Planning</h3>
-                    <p class="feature-description">Professional event planning and decor services tailored to your vision and theme</p>
+                    <div class="feature-icon">📺</div>
+                    <h3 class="feature-title">Audio-Visual Equipment</h3>
+                    <p class="feature-description">Professional TV/projector screens and sound systems for presentations, training sessions, and multimedia content</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">❄️</div>
                     <h3 class="feature-title">Climate Controlled</h3>
-                    <p class="feature-description">Fully air-conditioned banquet hall ensuring comfort for you and your guests throughout the celebration</p>
+                    <p class="feature-description">Fully air-conditioned environment ensuring comfort for extended meetings and training sessions</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🍽️</div>
+                    <h3 class="feature-title">In-House Catering</h3>
+                    <p class="feature-description">Complete catering services with pure vegetarian multi-cuisine options, perfect for corporate meals and refreshments</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">🚗</div>
-                    <h3 class="feature-title">Ample Parking</h3>
-                    <p class="feature-description">Spacious parking facilities with valet services available on request for guest convenience</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🛏️</div>
-                    <h3 class="feature-title">Guest Accommodation</h3>
-                    <p class="feature-description">7 air-conditioned guest rooms with double beds for family and close relatives</p>
+                    <h3 class="feature-title">Convenient Location</h3>
+                    <p class="feature-description">Centrally located in the heart of Gandhidham-Kutch with ample parking facilities for easy access</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">🌿</div>
-                    <h3 class="feature-title">Family-Friendly</h3>
-                    <p class="feature-description">Pure vegetarian, alcohol-free, and smoke-free environment perfect for dignified celebrations</p>
+                    <h3 class="feature-title">Professional Environment</h3>
+                    <p class="feature-description">Pure vegetarian, alcohol-free, and smoke-free environment ideal for dignified corporate gatherings</p>
                 </div>
                 
                 <div class="feature-card">
-                    <div class="feature-icon">📍</div>
-                    <h3 class="feature-title">Prime Location</h3>
-                    <p class="feature-description">Centrally located in the heart of Gandhidham-Kutch, easily accessible for all guests</p>
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Versatile Space</h3>
+                    <p class="feature-description">Flexible layout options to accommodate various event formats from board meetings to large training sessions</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3 class="feature-title">Dedicated Support</h3>
+                    <p class="feature-description">Professional event coordination and support staff to ensure your corporate event runs smoothly</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section class="use-cases">
+        <div class="container">
+            <h2 class="section-title">Perfect For</h2>
+            <p class="section-subtitle">Versatile space for various corporate and social gatherings</p>
+            
+            <div class="use-cases-grid">
+                <div class="use-case-card">
+                    <div class="use-case-icon">📚</div>
+                    <h3 class="use-case-title">Training Sessions</h3>
+                    <p class="use-case-description">Ideal for employee training, workshops, and professional development programs with full AV support</p>
+                </div>
+                
+                <div class="use-case-card">
+                    <div class="use-case-icon">🤝</div>
+                    <h3 class="use-case-title">Corporate Get-Togethers</h3>
+                    <p class="use-case-description">Perfect for team building events, company celebrations, and corporate social gatherings</p>
+                </div>
+                
+                <div class="use-case-card">
+                    <div class="use-case-icon">🎂</div>
+                    <h3 class="use-case-title">Birthday Parties</h3>
+                    <p class="use-case-description">Celebrate special occasions with colleagues in a professional yet festive atmosphere</p>
+                </div>
+                
+                <div class="use-case-card">
+                    <div class="use-case-icon">👯</div>
+                    <h3 class="use-case-title">Kitty Parties</h3>
+                    <p class="use-case-description">Host social gatherings and kitty parties in a comfortable and elegant setting</p>
+                </div>
+                
+                <div class="use-case-card">
+                    <div class="use-case-icon">🎤</div>
+                    <h3 class="use-case-title">Karaoke Parties</h3>
+                    <p class="use-case-description">Entertainment events with professional sound systems for music and karaoke sessions</p>
+                </div>
+                
+                <div class="use-case-card">
+                    <div class="use-case-icon">💼</div>
+                    <h3 class="use-case-title">Business Meetings</h3>
+                    <p class="use-case-description">Conduct important meetings, presentations, and conferences in a professional environment</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Gallery Section -->
-    <section class="wedding-gallery">
+    <section class="corporate-gallery">
         <div class="container">
-            <h2 class="section-title">Wedding Gallery</h2>
-            <p class="section-subtitle">Glimpses of beautiful celebrations at Banarasi</p>
+            <h2 class="section-title">Corporate Events Gallery</h2>
+            <p class="section-subtitle">Glimpses of successful corporate gatherings at Banarasi</p>
             
-            <div class="wedding-gallery-banner">
-                <div class="wedding-gallery-carousel">
+            <div class="corporate-gallery-banner">
+                <div class="corporate-gallery-carousel">
                     <div class="gallery-slide active">
-                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762184817/pexels-vireshstudio-2060239_mjkp2x.jpg" 
-                             alt="Wedding Celebration 1">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762186029/pexels-mikhail-nilov-9300728_jwlwar.jpg" 
+                             alt="Corporate Event 1">
                     </div>
                     <div class="gallery-slide">
                         <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082789/aboutUsPicture_bsabvd.jpg" 
-                             alt="Wedding Celebration 2">
+                             alt="Corporate Event 2">
                     </div>
                     <div class="gallery-slide">
                         <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083857/banquet-2_nqewdo.jpg" 
-                             alt="Wedding Celebration 3">
+                             alt="Corporate Event 3">
                     </div>
                     <div class="gallery-slide">
                         <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083521/about-2_g3jfzn.jpg" 
-                             alt="Wedding Celebration 4">
+                             alt="Corporate Event 4">
                     </div>
                     <div class="gallery-slide">
                         <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762183423/about3_jm8d8d.jpg" 
-                             alt="Wedding Celebration 5">
-                    </div>
-                    <div class="gallery-slide">
-                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082869/restaurant_spd38n_ouudih.jpg" 
-                             alt="Wedding Celebration 6">
+                             alt="Corporate Event 5">
                     </div>
                 </div>
                 <div class="carousel-progress">
-                    <div class="progress-bar" id="weddingGalleryProgress"></div>
+                    <div class="progress-bar" id="corporateGalleryProgress"></div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Call to Action Section -->
-    <section class="wedding-cta">
+    <section class="corporate-cta">
         <div class="container">
-            <h2 class="wedding-cta-title">Ready to Plan Your Dream Wedding?</h2>
-            <p class="wedding-cta-text">Contact us today to discuss your requirements and get a personalized quote</p>
+            <h2 class="corporate-cta-title">Ready to Host Your Next Corporate Event?</h2>
+            <p class="corporate-cta-text">Contact us today to discuss your requirements and book our Corporate Hall for your next meeting, training session, or corporate gathering</p>
             <div class="cta-buttons">
-                <a href="index.html#contact" class="btn-light">Book a Site Visit</a>
+                <a href="index.html#contact" class="btn-light">Book Corporate Hall</a>
                 <a href="tel:+918511663766" class="btn-outline-light">Call Us Now</a>
             </div>
         </div>
@@ -602,13 +691,13 @@
 
     <script src="assets/js/script.js"></script>
     <script>
-        // Wedding Gallery Carousel
+        // Corporate Gallery Carousel
         (function() {
-            const carousel = document.querySelector('.wedding-gallery-carousel');
+            const carousel = document.querySelector('.corporate-gallery-carousel');
             if (!carousel) return;
             
             const slides = carousel.querySelectorAll('.gallery-slide');
-            const progressBar = document.getElementById('weddingGalleryProgress');
+            const progressBar = document.getElementById('corporateGalleryProgress');
             let currentSlide = 0;
             const slideDuration = 2500; // 2.5 seconds per slide
             let slideInterval;
