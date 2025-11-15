@@ -30,7 +30,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.4;
+            opacity: 0.9;
         }
 
         .corporate-hero-overlay {
@@ -39,7 +39,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(92, 64, 51, 0.7), rgba(160, 82, 45, 0.8));
+            background: linear-gradient(to bottom, rgba(92, 64, 51, 0.6), rgba(160, 82, 45, 0.7));
         }
 
         .corporate-hero-content {
@@ -276,6 +276,7 @@
             transition: all var(--transition-normal);
             display: inline-block;
             text-decoration: none;
+            text-align: center;
             box-shadow: 0 4px 15px rgba(92, 64, 51, 0.2);
         }
 
@@ -296,6 +297,7 @@
             transition: all var(--transition-normal);
             display: inline-block;
             text-decoration: none;
+            text-align: center;
         }
 
         .btn-outline-light:hover {
@@ -312,18 +314,44 @@
 
         .use-cases-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 2rem;
             margin-top: 3rem;
         }
 
+        /* Each card spans 2 columns in the 6-column grid */
         .use-case-card {
+            grid-column: span 2;
             background: var(--color-white);
             padding: 2.5rem 2rem;
             border-radius: 8px;
             text-align: center;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        /* Center the last 2 items together - start from column 2 */
+        .use-cases-grid .use-case-card:nth-child(4) {
+            grid-column: 2 / 4;
+        }
+
+        .use-cases-grid .use-case-card:nth-child(5) {
+            grid-column: 4 / 6;
+        }
+
+        @media (max-width: 900px) {
+            .use-cases-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .use-case-card {
+                grid-column: auto;
+            }
+            
+            .use-cases-grid .use-case-card:nth-child(4),
+            .use-cases-grid .use-case-card:nth-child(5) {
+                grid-column: auto;
+            }
         }
 
         .use-case-card:hover {
@@ -402,13 +430,23 @@
         <div class="container">
             <div class="nav-content">
                 <div class="logo-container">
-                    <img src="assets/images/logo.png" alt="Banarasi Banquet & Restaurant Logo" class="logo">
+                    <a href="index.html#home">
+                        <img src="assets/images/logo.png" alt="Banarasi Banquet & Restaurant Logo" class="logo">
+                    </a>
                 </div>
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="index.html#home" class="nav-link">Home</a></li>
                     <li><a href="index.html#about" class="nav-link">About</a></li>
                     <li><a href="index.html#restaurant" class="nav-link">Restaurant</a></li>
                     <li><a href="index.html#banquet" class="nav-link">Banquet</a></li>
+                    <li class="nav-dropdown">
+                        <a href="#" class="nav-link">Services <span class="dropdown-arrow">▼</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="wedding-celebrations.html">Wedding Celebrations</a></li>
+                            <li><a href="corporate-events.html">Corporate Events</a></li>
+                            <li><a href="family-celebrations.html">Family Celebrations</a></li>
+                        </ul>
+                    </li>
                     <li><a href="index.html#contact" class="nav-link">Contact</a></li>
                     <li><a href="index.html#contact" class="btn btn-nav">Book Event</a></li>
                 </ul>
@@ -530,12 +568,6 @@
                 </div>
                 
                 <div class="use-case-card">
-                    <div class="use-case-icon">👯</div>
-                    <h3 class="use-case-title">Kitty Parties</h3>
-                    <p class="use-case-description">Host social gatherings and kitty parties in a comfortable and elegant setting</p>
-                </div>
-                
-                <div class="use-case-card">
                     <div class="use-case-icon">🎤</div>
                     <h3 class="use-case-title">Karaoke Parties</h3>
                     <p class="use-case-description">Entertainment events with professional sound systems for music and karaoke sessions</p>
@@ -603,7 +635,9 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-logo">
-                    <img src="assets/images/logo.png" alt="Banarasi Banquet & Restaurant Logo" class="footer-logo-img">
+                    <a href="index.html#home">
+                        <img src="assets/images/logo.png" alt="Banarasi Banquet & Restaurant Logo" class="footer-logo-img">
+                    </a>
                 </div>
                 <div class="footer-links">
                     <h4>Quick Links</h4>

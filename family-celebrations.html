@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="description" content="Wedding Celebrations at Banarasi Banquet - Create your dream wedding with our luxurious banquet hall, authentic catering, and complete event planning services">
-    <title>Wedding Celebrations - Banarasi Banquet & Restaurant</title>
+    <meta name="description" content="Family Celebrations at Banarasi Restaurant - Intimate gatherings, birthdays, and family get-togethers in our cozy party hall with pure vegetarian cuisine">
+    <title>Family Celebrations - Banarasi Banquet & Restaurant</title>
     <link rel="icon" type="image/png" href="assets/images/logo.png">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Wedding Page Specific Styles */
-        .wedding-hero {
+        /* Family Celebrations Page Specific Styles */
+        .family-hero {
             position: relative;
             height: 70vh;
             min-height: 500px;
@@ -23,7 +23,7 @@
             background: linear-gradient(135deg, var(--color-dark-brown) 0%, var(--color-reddish-brown) 100%);
         }
 
-        .wedding-hero-image {
+        .family-hero-image {
             position: absolute;
             top: 0;
             left: 0;
@@ -33,7 +33,7 @@
             opacity: 0.9;
         }
 
-        .wedding-hero-overlay {
+        .family-hero-overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -42,7 +42,7 @@
             background: linear-gradient(to bottom, rgba(92, 64, 51, 0.6), rgba(160, 82, 45, 0.7));
         }
 
-        .wedding-hero-content {
+        .family-hero-content {
             position: relative;
             z-index: 2;
             text-align: center;
@@ -51,7 +51,7 @@
             padding: 0 2rem;
         }
 
-        .wedding-hero-title {
+        .family-hero-title {
             font-family: var(--font-serif);
             font-size: 4rem;
             font-weight: 700;
@@ -60,38 +60,38 @@
             line-height: 1.1;
         }
 
-        .wedding-hero-subtitle {
+        .family-hero-subtitle {
             font-size: 1.5rem;
             font-weight: 300;
             margin-bottom: 2rem;
             opacity: 0.95;
         }
 
-        .wedding-intro {
+        .family-intro {
             padding: 5rem 0;
             background: var(--color-off-white);
         }
 
-        .wedding-intro-content {
+        .family-intro-content {
             max-width: 900px;
             margin: 0 auto;
             text-align: center;
         }
 
-        .wedding-intro-title {
+        .family-intro-title {
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
             color: var(--color-dark-brown);
         }
 
-        .wedding-intro-text {
+        .family-intro-text {
             font-size: 1.125rem;
             line-height: 1.8;
             color: var(--color-gray-dark);
             margin-bottom: 1rem;
         }
 
-        .wedding-features {
+        .family-features {
             padding: 5rem 0;
             background: var(--color-cream);
         }
@@ -154,12 +154,12 @@
             color: var(--color-gray-dark);
         }
 
-        .wedding-gallery {
+        .family-gallery {
             padding: 5rem 0;
-            background: var(--color-cream);
+            background: var(--color-off-white);
         }
 
-        .wedding-gallery-banner {
+        .family-gallery-banner {
             width: 100%;
             max-width: 1400px;
             margin: 3rem auto 0;
@@ -169,7 +169,7 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .wedding-gallery-carousel {
+        .family-gallery-carousel {
             position: relative;
             width: 100%;
             overflow: hidden;
@@ -216,7 +216,7 @@
             }
         }
 
-        .wedding-cta {
+        .family-cta {
             padding: 6rem 0;
             background: var(--color-off-white);
             text-align: center;
@@ -224,7 +224,7 @@
             overflow: hidden;
         }
 
-        .wedding-cta::before {
+        .family-cta::before {
             content: '';
             position: absolute;
             top: 0;
@@ -240,7 +240,7 @@
             );
         }
 
-        .wedding-cta-title {
+        .family-cta-title {
             font-family: var(--font-serif);
             font-size: 2.75rem;
             font-weight: 600;
@@ -249,7 +249,7 @@
             line-height: 1.2;
         }
 
-        .wedding-cta-text {
+        .family-cta-text {
             font-size: 1.25rem;
             line-height: 1.6;
             margin-bottom: 3rem;
@@ -307,16 +307,123 @@
             box-shadow: 0 8px 25px rgba(92, 64, 51, 0.2);
         }
 
+        .celebration-types {
+            padding: 5rem 0;
+            background: var(--color-cream);
+        }
+
+        .celebration-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .celebration-card {
+            background: var(--color-white);
+            padding: 2.5rem 2rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        .celebration-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .celebration-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .celebration-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--color-dark-brown);
+        }
+
+        .celebration-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--color-gray-dark);
+        }
+
+        .spaces-section {
+            padding: 5rem 0;
+            background: var(--color-off-white);
+        }
+
+        .spaces-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .space-card {
+            background: var(--color-white);
+            padding: 3rem 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        .space-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .space-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--color-dark-brown);
+        }
+
+        .space-capacity {
+            font-size: 1.25rem;
+            color: var(--color-reddish-brown);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .space-features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .space-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--color-gray-medium);
+            display: flex;
+            align-items: flex-start;
+            font-size: 1rem;
+            color: var(--color-gray-dark);
+        }
+
+        .space-features li:last-child {
+            border-bottom: none;
+        }
+
+        .space-features li::before {
+            content: "✓";
+            color: var(--color-dark-green);
+            font-weight: bold;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
         @media (max-width: 768px) {
-            .wedding-hero-title {
+            .family-hero-title {
                 font-size: 2.5rem;
             }
 
-            .wedding-hero-subtitle {
+            .family-hero-subtitle {
                 font-size: 1.125rem;
             }
 
-            .wedding-intro-title {
+            .family-intro-title {
                 font-size: 2rem;
             }
 
@@ -324,15 +431,23 @@
                 grid-template-columns: 1fr;
             }
 
-            .wedding-cta {
+            .celebration-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .spaces-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .family-cta {
                 padding: 4rem 0;
             }
 
-            .wedding-cta-title {
+            .family-cta-title {
                 font-size: 2rem;
             }
 
-            .wedding-cta-text {
+            .family-cta-text {
                 font-size: 1.125rem;
                 padding: 0 1rem;
             }
@@ -387,127 +502,213 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="wedding-hero">
-        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762184817/pexels-vireshstudio-2060239_mjkp2x.jpg" 
-             alt="Wedding Celebration at Banarasi Banquet" 
-             class="wedding-hero-image">
-        <div class="wedding-hero-overlay"></div>
-        <div class="wedding-hero-content">
-            <h1 class="wedding-hero-title">Wedding Celebrations</h1>
-            <p class="wedding-hero-subtitle">Where Dreams Come to Life - Create Your Perfect Wedding at Banarasi Banquet</p>
+    <section class="family-hero">
+        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082869/restaurant_spd38n_ouudih.jpg" 
+             alt="Family Celebrations at Banarasi Restaurant" 
+             class="family-hero-image">
+        <div class="family-hero-overlay"></div>
+        <div class="family-hero-content">
+            <h1 class="family-hero-title">Family Celebrations</h1>
+            <p class="family-hero-subtitle">Creating Cherished Memories with Loved Ones - Intimate Gatherings Made Special</p>
         </div>
     </section>
 
     <!-- Introduction Section -->
-    <section class="wedding-intro">
+    <section class="family-intro">
         <div class="container">
-            <div class="wedding-intro-content">
-                <h2 class="wedding-intro-title">Celebrate Your Special Day in Grand Style</h2>
-                <p class="wedding-intro-text">
-                    At Banarasi Banquet, we understand that your wedding day is one of the most important moments of your life. Our sprawling banquet hall, located in the heart of Gandhidham, provides the perfect backdrop for your dream wedding celebration.
+            <div class="family-intro-content">
+                <h2 class="family-intro-title">Celebrate Life's Precious Moments Together</h2>
+                <p class="family-intro-text">
+                    At Banarasi Restaurant, we believe that the best celebrations happen when families come together. Our warm, inviting atmosphere and cozy party hall provide the perfect setting for intimate family gatherings, birthdays, and special occasions that create lasting memories.
                 </p>
-                <p class="wedding-intro-text">
-                    With majestic heights, elegant interiors, and the capacity to host up to 1200 guests, we offer everything you need to create unforgettable memories. From traditional ceremonies to grand receptions, our dedicated team ensures every detail is perfect.
+                <p class="family-intro-text">
+                    Whether you're planning a small birthday party for 20-30 guests in our dedicated party hall, or a larger family get-together in our main restaurant seating up to 100 guests, we offer pure vegetarian multi-cuisine dining that brings everyone together around delicious, healthy food.
                 </p>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="wedding-features">
+    <section class="family-features">
         <div class="container">
-            <h2 class="section-title">Why Choose Banarasi for Your Wedding</h2>
+            <h2 class="section-title">Why Choose Banarasi for Family Celebrations</h2>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🏛️</div>
-                    <h3 class="feature-title">Grand Venue</h3>
-                    <p class="feature-description">Sprawling banquet area with majestic heights accommodating up to 1200 guests, perfect for large celebrations</p>
+                    <div class="feature-icon">🏠</div>
+                    <h3 class="feature-title">Intimate Party Hall</h3>
+                    <p class="feature-description">Cozy party hall perfect for gatherings of 20-30 guests, creating an intimate atmosphere for special celebrations</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">🍽️</div>
-                    <h3 class="feature-title">Authentic Cuisine</h3>
-                    <p class="feature-description">Multi-cuisine pure vegetarian catering with authentic North Indian, South Indian, Chinese, and Continental delicacies</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <h3 class="feature-title">Complete Event Planning</h3>
-                    <p class="feature-description">Professional event planning and decor services tailored to your vision and theme</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">❄️</div>
-                    <h3 class="feature-title">Climate Controlled</h3>
-                    <p class="feature-description">Fully air-conditioned banquet hall ensuring comfort for you and your guests throughout the celebration</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🚗</div>
-                    <h3 class="feature-title">Ample Parking</h3>
-                    <p class="feature-description">Spacious parking facilities with valet services available on request for guest convenience</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🛏️</div>
-                    <h3 class="feature-title">Guest Accommodation</h3>
-                    <p class="feature-description">7 air-conditioned guest rooms with double beds for family and close relatives</p>
+                    <h3 class="feature-title">Pure Vegetarian Cuisine</h3>
+                    <p class="feature-description">Multi-cuisine pure vegetarian menu featuring North Indian, South Indian, Chinese, and Continental dishes</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">🌿</div>
+                    <h3 class="feature-title">Healthy & Hygienic</h3>
+                    <p class="feature-description">No artificial colors, no ajinomoto, and no palm oil - only fresh, healthy ingredients for your family's well-being</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">❄️</div>
+                    <h3 class="feature-title">Comfortable Environment</h3>
+                    <p class="feature-description">Fully air-conditioned restaurant ensuring comfort for your family throughout the celebration</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍👩‍👧‍👦</div>
                     <h3 class="feature-title">Family-Friendly</h3>
-                    <p class="feature-description">Pure vegetarian, alcohol-free, and smoke-free environment perfect for dignified celebrations</p>
+                    <p class="feature-description">Pure vegetarian, alcohol-free, and smoke-free environment perfect for dignified family celebrations</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">Warm Ambiance</h3>
+                    <p class="feature-description">Comfortable seating, attentive service, and serene ambiance that makes every meal memorable</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎂</div>
+                    <h3 class="feature-title">Special Occasions</h3>
+                    <p class="feature-description">Perfect for birthdays, anniversaries, family reunions, and milestone celebrations</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">📍</div>
-                    <h3 class="feature-title">Prime Location</h3>
-                    <p class="feature-description">Centrally located in the heart of Gandhidham-Kutch, easily accessible for all guests</p>
+                    <h3 class="feature-title">Convenient Location</h3>
+                    <p class="feature-description">Centrally located in the heart of Gandhidham-Kutch, easily accessible for all family members</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Spaces Section -->
+    <section class="spaces-section">
+        <div class="container">
+            <h2 class="section-title">Our Celebration Spaces</h2>
+            <p class="section-subtitle">Choose the perfect space for your family gathering</p>
+            
+            <div class="spaces-grid">
+                <div class="space-card">
+                    <h3 class="space-title">Main Restaurant</h3>
+                    <div class="space-capacity">Up to 100 Guests</div>
+                    <ul class="space-features">
+                        <li>Spacious dining area with comfortable seating</li>
+                        <li>Perfect for larger family gatherings</li>
+                        <li>Fully air-conditioned environment</li>
+                        <li>Multi-cuisine pure vegetarian menu</li>
+                        <li>Attentive service for your family</li>
+                        <li>Ideal for family reunions and celebrations</li>
+                    </ul>
+                </div>
+                
+                <div class="space-card">
+                    <h3 class="space-title">Party Hall</h3>
+                    <div class="space-capacity">20-30 Guests</div>
+                    <ul class="space-features">
+                        <li>Intimate and cozy private space</li>
+                        <li>Perfect for small birthday parties</li>
+                        <li>Dedicated area for family celebrations</li>
+                        <li>Same delicious multi-cuisine menu</li>
+                        <li>Private and comfortable setting</li>
+                        <li>Ideal for intimate family get-togethers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Celebration Types Section -->
+    <section class="celebration-types">
+        <div class="container">
+            <h2 class="section-title">Perfect For Every Family Occasion</h2>
+            <p class="section-subtitle">Celebrate life's special moments with us</p>
+            
+            <div class="celebration-grid">
+                <div class="celebration-card">
+                    <div class="celebration-icon">🎂</div>
+                    <h3 class="celebration-title">Birthday Parties</h3>
+                    <p class="celebration-description">Make birthdays extra special with our cozy party hall and delicious vegetarian feast for the whole family</p>
+                </div>
+                
+                <div class="celebration-card">
+                    <div class="celebration-icon">💍</div>
+                    <h3 class="celebration-title">Anniversaries</h3>
+                    <p class="celebration-description">Celebrate milestones and anniversaries in an intimate setting with your loved ones</p>
+                </div>
+                
+                <div class="celebration-card">
+                    <div class="celebration-icon">👨‍👩‍👧‍👦</div>
+                    <h3 class="celebration-title">Family Get-Togethers</h3>
+                    <p class="celebration-description">Reunite with extended family and create beautiful memories over delicious food</p>
+                </div>
+                
+                <div class="celebration-card">
+                    <div class="celebration-icon">🎓</div>
+                    <h3 class="celebration-title">Achievement Celebrations</h3>
+                    <p class="celebration-description">Celebrate graduations, promotions, and achievements with your proud family</p>
+                </div>
+                
+                <div class="celebration-card">
+                    <div class="celebration-icon">🎁</div>
+                    <h3 class="celebration-title">Festival Celebrations</h3>
+                    <p class="celebration-description">Mark festivals and special occasions with traditional vegetarian delicacies</p>
+                </div>
+                
+                <div class="celebration-card">
+                    <div class="celebration-icon">💝</div>
+                    <h3 class="celebration-title">Special Moments</h3>
+                    <p class="celebration-description">Any reason to celebrate with family - we make every moment memorable</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Gallery Section -->
-    <section class="wedding-gallery">
+    <section class="family-gallery">
         <div class="container">
-            <h2 class="section-title">Wedding Gallery</h2>
-            <p class="section-subtitle">Glimpses of beautiful celebrations at Banarasi</p>
+            <h2 class="section-title">Family Celebrations Gallery</h2>
+            <p class="section-subtitle">Glimpses of joyful family moments at Banarasi</p>
             
-            <div class="wedding-gallery-banner">
-                <div class="wedding-gallery-carousel">
+            <div class="family-gallery-banner">
+                <div class="family-gallery-carousel">
+                    <div class="gallery-slide active">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082869/restaurant_spd38n_ouudih.jpg" 
+                             alt="Family Celebration 1">
+                    </div>
+                    <div class="gallery-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762081309/restaurant-2_oakzc4_t5yepk.jpg" 
+                             alt="Family Celebration 2">
+                    </div>
+                    <div class="gallery-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762187947/restaurant-3_sfpxm2.jpg" 
+                             alt="Family Celebration 3">
+                    </div>
+                    <div class="gallery-slide">
+                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762188046/restaurant-4_esfbyw.jpg" 
+                             alt="Family Celebration 4">
+                    </div>
                     <div class="gallery-slide">
                         <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762082789/aboutUsPicture_bsabvd.jpg" 
-                             alt="Wedding Celebration 1">
-                    </div>
-                    <div class="gallery-slide">
-                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083857/banquet-2_nqewdo.jpg" 
-                             alt="Wedding Celebration 2">
-                    </div>
-                    <div class="gallery-slide">
-                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762083521/about-2_g3jfzn.jpg" 
-                             alt="Wedding Celebration 3">
-                    </div>
-                    <div class="gallery-slide">
-                        <img src="https://res.cloudinary.com/dfuzagn6o/image/upload/v1762183423/about3_jm8d8d.jpg" 
-                             alt="Wedding Celebration 4">
+                             alt="Family Celebration 5">
                     </div>
                 </div>
                 <div class="carousel-progress">
-                    <div class="progress-bar" id="weddingGalleryProgress"></div>
+                    <div class="progress-bar" id="familyGalleryProgress"></div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Call to Action Section -->
-    <section class="wedding-cta">
+    <section class="family-cta">
         <div class="container">
-            <h2 class="wedding-cta-title">Ready to Plan Your Dream Wedding?</h2>
-            <p class="wedding-cta-text">Contact us today to discuss your requirements and get a personalized quote</p>
+            <h2 class="family-cta-title">Ready to Celebrate with Your Family?</h2>
+            <p class="family-cta-text">Contact us today to reserve our restaurant or party hall for your next family celebration</p>
             <div class="cta-buttons">
-                <a href="index.html#contact" class="btn-light">Book a Site Visit</a>
+                <a href="index.html#contact" class="btn-light">Reserve Table</a>
                 <a href="tel:+918511663766" class="btn-outline-light">Call Us Now</a>
             </div>
         </div>
@@ -608,13 +809,13 @@
 
     <script src="assets/js/script.js"></script>
     <script>
-        // Wedding Gallery Carousel
+        // Family Gallery Carousel
         (function() {
-            const carousel = document.querySelector('.wedding-gallery-carousel');
+            const carousel = document.querySelector('.family-gallery-carousel');
             if (!carousel) return;
             
             const slides = carousel.querySelectorAll('.gallery-slide');
-            const progressBar = document.getElementById('weddingGalleryProgress');
+            const progressBar = document.getElementById('familyGalleryProgress');
             let currentSlide = 0;
             const slideDuration = 2500; // 2.5 seconds per slide
             let slideInterval;
