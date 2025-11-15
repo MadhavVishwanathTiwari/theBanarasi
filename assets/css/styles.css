@@ -892,7 +892,8 @@ section:nth-child(even) {
 
 .scroll-video-section {
     position: relative;
-    padding: var(--spacing-xl) 0;
+    padding: calc(var(--spacing-xl) + 3rem) 0 var(--spacing-xl);
+    --stickyTop: clamp(110px, 15vh, 240px);
 }
 
 .scroll-video-spacer {
@@ -903,8 +904,8 @@ section:nth-child(even) {
 /* Internal pin track inside the Banquet section */
 .pin-track {
     height: var(--pinTrackH, 1600px);
-    margin-top: calc(-1 * var(--stickyTop, 80px));
-    padding-top: var(--stickyTop, 80px);
+    margin-top: 0;
+    padding-top: max(calc(var(--stickyTop, 80px) - 80px), 1.25rem);
 }
 
 .pin-sticky {
@@ -946,12 +947,22 @@ section:nth-child(even) {
 }
 
 @media (max-width: 1024px) {
+    .scroll-video-section {
+        --stickyTop: clamp(90px, 18vh, 190px);
+        padding-top: calc(var(--spacing-xl) + 2rem);
+    }
+    
     .scroll-video-container {
         height: clamp(380px, 80vh, 900px);
     }
 }
 
 @media (max-width: 768px) {
+    .scroll-video-section {
+        --stickyTop: clamp(80px, 22vh, 160px);
+        padding-top: calc(var(--spacing-xl) + 1.5rem);
+    }
+    
     .scroll-video-wrapper, .pin-sticky {
         padding: 0 var(--spacing-sm);
     }
@@ -1309,7 +1320,7 @@ section:nth-child(even) {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
 }
 
 .banquet-feature {
@@ -1509,9 +1520,19 @@ section:nth-child(even) {
     font-weight: 700;
     margin-bottom: var(--spacing-md);
     color: #D4AF37;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-    padding-bottom: 0.5rem;
-    display: inline-block;
+    position: relative;
+    padding-bottom: 0.35rem;
+}
+
+.footer-links h4::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 2.5rem;
+    height: 1.5px;
+    border-radius: 999px;
+    background-color: rgba(212, 175, 55, 0.45);
 }
 
 .footer-links ul {
