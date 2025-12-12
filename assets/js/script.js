@@ -583,7 +583,7 @@ const whatsappChatBox = document.getElementById('whatsappChatBox');
 const whatsappClose = document.getElementById('whatsappClose');
 const whatsappInput = document.getElementById('whatsappInput');
 const whatsappSend = document.getElementById('whatsappSend');
-const whatsappNumber = '07069000977'; // Banarasi primary contact
+const whatsappNumber = '917069000977'; // Banarasi primary contact
 
 // Toggle chat box
 if (whatsappButton) {
