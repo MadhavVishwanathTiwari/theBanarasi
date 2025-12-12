@@ -1497,7 +1497,7 @@ section:nth-child(even) {
 
 .footer-content {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr 1fr;
     gap: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
 }
